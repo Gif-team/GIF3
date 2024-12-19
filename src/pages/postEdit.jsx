@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-
-import { Header } from "../components/header";
-import { AlertContext } from "../context/alertContext";
-import { AlertPopUp } from "../components/alertPopUp";
-import SelectSmall from "../components/dropButton";
-import { ImageCard } from "../components/imageCard";
 import axios from "axios";
+
+import { AlertContext } from "../context/alertContext";
+import { Header } from "../components/header";
+import { AlertPopUp } from "../components/alertPopUp";
+import { ImageCard } from "../components/imageCard";
+import SelectSmall from "../components/dropButton";
 
 import Camera from "../imgs/camera.svg";
 import Floor from "../imgs/floor.svg";
@@ -13,34 +13,65 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
-export default function PostEdit() {
+export default function PostEdit({ postId }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
-
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [commaAmount, setCommaAmount] = useState("");
   const [description, setDescription] = useState("");
-
-  const [imgFiles, setImgFiles] = useState([]); // 이미지 파일들을 저장할 배열
-  const imgRef = useRef();
-
   const [selectedLostItem, setSelectedLostItem] = useState("");
   const [selectedGwan, setSelectedGwan] = useState("");
   const [selectedFloor, setSelectedFloor] = useState("");
+  const [imgFiles, setImgFiles] = useState([]);
+  const imgRef = useRef();
 
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
   const floors = ["1층", "2층", "3층", "4층", "5층"];
 
-  const setCommaMoney = (value) => {
-    let removeComma = value.replace(/[^0-9.]/g, "").replaceAll(",", "");
-    if (removeComma <= 1000000) {
-      setCommaAmount(removeComma && parseInt(removeComma).toLocaleString());
-      setAmount(removeComma);
+  // 알림 팝업
+  useEffect(() => {
+    setOpen(alertPopUp);
+  }, [alertPopUp]);
+
+  // 이미지 배열에 추가 (업로드는 제출 시 진행)
+  const addImage = async () => {
+    const file = imgRef.current.files[0];
+    if (file && imgFiles.length < 10) {
+      setImgFiles((prevFiles) => [...prevFiles, file]);
     }
   };
 
+  // 이미지 배열에서 제거
+  const deleteImage = (index) => {
+    setImgFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  // 이미지를 서버에서 가져옴
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const { data: fileNames } = await axios.get(`/api/images/${postId}`);
+
+        const imageUrls = await Promise.all(
+          fileNames.map(async (fileName) => {
+            const {
+              data: { url },
+            } = await axios.get(`/api/image-url/${fileName}`);
+            return url;
+          })
+        );
+
+        setImgFiles(imageUrls);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchImages();
+  }, [postId]);
+
+  // 유효성 검사
   const isFormValid =
     title.trim() !== "" &&
     amount.trim() !== "" &&
@@ -50,81 +81,69 @@ export default function PostEdit() {
     selectedFloor.trim() !== "" &&
     imgFiles.length > 0;
 
-  useEffect(() => {
-    setOpen(alertPopUp);
-  }, [alertPopUp]);
-
-  const postWrite = () => {
-    const url = "/api/post/create";
-
-    const data = {
-      title: title,
-      price: Number(amount),
-      content: description,
-      category: Boolean(!lostItems.indexOf(selectedLostItem)),
-      building: {
-        id: Number(gwans.indexOf(selectedGwan) + 1),
-        floor: Number(
-          selectedGwan === "기숙사"
-            ? floors.indexOf(selectedFloor) + 1
-            : floors.indexOf(selectedFloor.slice(0, 4)) + 1
-        ),
-      },
-      images: imgFiles.map((file, index) => ({
-        imageId: index,
-        imageUrl: file,
-      })),
-    };
-
-    // console.log(data);
-
-    axios
-      .post(url, data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 이미지 추가 핸들러
-  const handleImage = () => {
-    const file = imgRef.current.files[0];
-    if (file && imgFiles.length < 10) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onloadend = () => {
-        setImgFiles((prevFiles) => [...prevFiles, reader.result]); // 이미지 추가
+  // 수정된 게시물 제출
+  const updatePost = async () => {
+    try {
+      const data = {
+        title,
+        price: Number(amount),
+        content: description,
+        category: Boolean(!lostItems.indexOf(selectedLostItem)),
+        building: {
+          id: gwans.indexOf(selectedGwan) + 1,
+          floor:
+            selectedGwan === "기숙사"
+              ? floors.indexOf(selectedFloor) + 1
+              : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
+        },
+        images: [],
       };
+
+      // 이미지 업로드
+      for (let file of imgFiles) {
+        const { data: presignedUrl } = await axios.post(
+          `/api/s3/presigned-url`,
+          {
+            fileName: file.name,
+            fileType: file.type,
+          }
+        );
+
+        await axios.put(presignedUrl, file, {
+          headers: { "Content-Type": file.type },
+        });
+
+        const {
+          data: { url },
+        } = await axios.get(`/api/image-url/${file.name}`);
+        data.images.push(url);
+      }
+
+      await axios.put(`/api/post/update/${postId}`, data);
+      console.log("Post updated successfully.");
+    } catch (error) {
+      console.error("Error updating post:", error);
     }
   };
 
-  // 이미지 삭제 핸들러
-  const handleDeleteImage = (index) => {
-    setImgFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  };
-
   return (
-    <div className="flex flex-col items-center w-full ">
+    <div className="flex flex-col items-center w-full">
       <Header />
       {alertPopUp && <AlertPopUp />}
       <div className="flex flex-col mt-[60px] w-[600px] p-[36px]">
-        {/* 이미지 */}
+        {/*이미지*/}
         <div className="flex space-x-2 overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
           <div
             className="flex items-center justify-center 
             border border-gray-400 rounded-lg select-none
             w-[150px] h-[150px] flex-shrink-0"
           >
-            {/* 카메라 이미지 추가 버튼 */}
             <input
               type="file"
               id="imgUpload"
               className="hidden"
               ref={imgRef}
-              onChange={handleImage}
+              onChange={addImage}
             />
             <label
               htmlFor="imgUpload"
@@ -134,14 +153,12 @@ export default function PostEdit() {
             </label>
           </div>
 
-          {/* 추가한 이미지들 */}
           {imgFiles.map((imgFile, index) => (
             <div key={index} className="relative">
-              <ImageCard url={imgFile} />
-              {/* 삭제 버튼 */}
+              <ImageCard url={URL.createObjectURL(imgFile)} />
               <button
                 className="absolute p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
-                onClick={() => handleDeleteImage(index)}
+                onClick={() => deleteImage(index)}
               >
                 <img src={TrashCan} alt="trash" />
               </button>
@@ -149,8 +166,9 @@ export default function PostEdit() {
           ))}
         </div>
 
-        {/* 내용 */}
         <div className="bg-gray-400 w-full h-[1px] my-5"></div>
+
+        {/*게시물*/}
         <div className="flex flex-col gap-4">
           <input
             type="text"
@@ -164,8 +182,8 @@ export default function PostEdit() {
             type="text"
             placeholder="사례금을 입력하세요(최대 100만원)"
             className="border-none outline-none"
-            value={commaAmount}
-            onChange={(e) => setCommaMoney(e.target.value)}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
           />
 
           <textarea
@@ -178,7 +196,7 @@ export default function PostEdit() {
           ></textarea>
         </div>
 
-        {/* 드롭다운 필터 */}
+        {/*드롭다운*/}
         <div className="flex items-center justify-center w-full mb-5">
           <SelectSmall
             svg={LostItem}
@@ -203,15 +221,15 @@ export default function PostEdit() {
           />
         </div>
 
-        {/* 추가 버튼 */}
+        {/* 제출 */}
         <button
           className={`px-[36px] py-[12px] bg-primary-primary rounded-[40px] text-[white] ml-auto ${
             isFormValid ? "bg-opacity-100" : "bg-opacity-50"
           }`}
           disabled={!isFormValid}
-          onClick={postWrite}
+          onClick={updatePost}
         >
-          추가
+          수정
         </button>
       </div>
     </div>
