@@ -64,7 +64,7 @@ export default function PostEdit({ postId }) {
 
         setImgFiles(imageUrls);
       } catch (error) {
-        console.error("Error fetching images:", error);
+        console.error(error);
       }
     };
 
@@ -120,9 +120,8 @@ export default function PostEdit({ postId }) {
       }
 
       await axios.put(`/api/post/update/${postId}`, data);
-      console.log("Post updated successfully.");
     } catch (error) {
-      console.error("Error updating post:", error);
+      console.error(error);
     }
   };
 
