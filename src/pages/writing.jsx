@@ -6,6 +6,7 @@ import { AlertPopUp } from "../components/alertPopUp";
 import SelectSmall from "../components/dropButton";
 import { ImageCard } from "../components/imageCard";
 import axios from "axios";
+import { url } from "./config";
 
 import Camera from "../imgs/camera.svg";
 import Floor from "../imgs/floor.svg";
@@ -74,27 +75,24 @@ export function Writing() {
         images: [],
       };
 
-      // 이미지 업로드
+      // 이미지 업로드 기능
       for (let file of imgFiles) {
-        const { data: presignedUrl } = await axios.post(
-          `/api/s3/presigned-url`,
-          {
-            fileName: file.name,
-            fileType: file.type,
-          }
-        );
+        // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
+        const presignedUrl = await axios.post(`${url}/api/s3/presigned-url`, {
+          fileName: file.name,
+          fileType: file.type,
+        });
 
+        // 2. 받아온 url로 파일을 보냄
         await axios.put(presignedUrl, file, {
           headers: { "Content-Type": file.type },
         });
 
-        const {
-          data: { url },
-        } = await axios.get(`/api/image-url/${file.name}`);
-        data.images.push(url);
+        const imgUrl = await axios.get(`${url}/api/image-url/${file.name}`);
+        data.images.push(imgUrl);
       }
 
-      await axios.post(`/api/post/create`, data);
+      await axios.post(`${url}/api/post/create`, data);
     } catch (error) {
       console.error(error);
     }
