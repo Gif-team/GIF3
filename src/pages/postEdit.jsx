@@ -127,7 +127,7 @@ export default function PostEdit({ postId }) {
 
   return (
     <div className="flex flex-col items-center w-full h-max">
-      {/* <Header /> */}
+      <Header />
       {alertPopUp && <AlertPopUp />}
       <div className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center">
         {/*게시물*/}

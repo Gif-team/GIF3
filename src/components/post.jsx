@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import blueLogo from "../imgs/blueLogo.png";
+import blueLogo from "../imgs/logo1.svg";
 import { useNavigate } from "react-router-dom";
 
 function where(lo) {
