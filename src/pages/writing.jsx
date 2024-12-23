@@ -84,9 +84,16 @@ export function Writing() {
         });
 
         // 2. 받아온 url로 파일을 보냄
-        await axios.put(presignedUrl, file, {
-          headers: { "Content-Type": file.type },
-        });
+        await axios.put(
+          presignedUrl,
+          file,
+          {
+            withCredentials: true,
+          },
+          {
+            headers: { "Content-Type": file.type },
+          }
+        );
 
         const imgUrl = await axios.get(`${url}/api/image-url/${file.name}`);
         data.images.push(imgUrl);
