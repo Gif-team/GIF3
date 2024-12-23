@@ -41,9 +41,13 @@ export function Chating() {
   };
 
   function getChatList() {
-    axios.get(`${url}/chat/room/part`).then((res) => {
-      setChatList(res.data.result);
-    });
+    axios
+      .get(`${url}/chat/room/part`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setChatList(res.data.result);
+      });
   }
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);

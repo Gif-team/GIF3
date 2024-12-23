@@ -50,7 +50,9 @@ export function Detail() {
 
   function getImage() {
     axios
-      .get(`${url}/post/${Param.id}`)
+      .get(`${url}/post/${Param.id}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setImg(res.data);
       })
@@ -71,11 +73,15 @@ export function Detail() {
   };
 
   useEffect(() => {
-    axios.get(`${url}/post/${Param.id}`).then((res) => {
-      setData(res.data);
-      setCount(res.data.LikeNumber);
-      getImage();
-    });
+    axios
+      .get(`${url}/post/${Param.id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setData(res.data);
+        setCount(res.data.LikeNumber);
+        getImage();
+      });
   }, [Param.id]);
 
   useEffect(() => {
