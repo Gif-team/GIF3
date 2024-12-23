@@ -22,7 +22,9 @@ export function Main({ search }) {
   }, [alertPopUp]);
   useEffect(() => {
     axios
-      .get(`${url}/post`)
+      .get(`${url}/post`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setPosts(res.data);
       })
