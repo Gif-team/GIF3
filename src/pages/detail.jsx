@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 function getDate(value) {
   const today = new Date();
-  const timeValue = new Date(value);
+  const timeValue = new Date(Math.floor(value));
 
   const betweenTime = Math.floor(
     (today.getTime() - timeValue.getTime()) / 1000 / 60
@@ -40,13 +40,24 @@ function where(lo) {
 }
 
 export function Detail() {
-  // 좋아요
   const [likeBool, setLikeBool] = useState(false);
   const [likeColor, setLikeColor] = useState("#E9E9E9");
   const [likeCount, setCount] = useState(0);
   const [data, setData] = useState([]);
+  const [img, setImg] = useState([]);
 
   const Param = useParams();
+
+  function getImage() {
+    axios
+      .get(`${url}/post/${Param.id}`)
+      .then((res) => {
+        setImg(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   function like() {
     axios.post(`${url}/post/${Param.id}/like`, {
@@ -71,6 +82,7 @@ export function Detail() {
     axios.get(`${url}/post/${Param.id}`).then((res) => {
       setData(res.data);
       setCount(res.data.LikeNumber);
+      getImage();
     });
   }, [Param.id]);
 
@@ -86,7 +98,7 @@ export function Detail() {
 
   // 이미지
   const [imgCnt, setImgCnt] = useState(0);
-  const [imgSrc, setImgSrc] = useState(data.image || []);
+  const [imgSrc, setImgSrc] = useState(img || []);
 
   const LeftArrow = () => {
     if (imgCnt >= 1) {
@@ -105,11 +117,6 @@ export function Detail() {
       setImgCnt(0);
     }
   };
-
-  useEffect(() => {
-    setImgSrc(imgSrc[imgCnt]);
-  }, [imgCnt]);
-
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
@@ -141,7 +148,7 @@ export function Detail() {
           </svg>
           {/* 이미지 추가 (필수) */}
           <img
-            src={imgSrc}
+            src={imgSrc[imgCnt]}
             alt="img"
             className="w-[550px] h-[550px] select-none rounded-2xl"
           />
