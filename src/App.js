@@ -28,7 +28,7 @@ function App() {
           <Route path="/post/:id" element={<Detail />} />
           <Route path="/chating" element={<Chating />} />
           <Route path="/changePassword" element={<ChangePassword />} />
-          <Route path="/postEdit" element={<PostEdit />} />
+          <Route path="/postEdit/:id" element={<PostEdit />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
