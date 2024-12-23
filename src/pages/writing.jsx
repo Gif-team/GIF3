@@ -94,7 +94,7 @@ export function Writing() {
         data.images.push(url);
       }
 
-      await axios.put(`/api/post/update/${postId}`, data);
+      await axios.post(`/api/post/create`, data);
     } catch (error) {
       console.error(error);
     }
@@ -104,7 +104,7 @@ export function Writing() {
     <div className="flex flex-col items-center w-full h-max">
       <Header />
       {alertPopUp && <AlertPopUp />}
-      <div className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center">
+      <div className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
         {/* 게시믈 */}
         <div className="flex flex-col w-full gap-14">
           {/* 이미지 */}
@@ -119,7 +119,7 @@ export function Writing() {
                 id="imgUpload"
                 className="hidden"
                 ref={imgRef}
-                onChange={handleImage}
+                onChange={addImage}
               />
               <label
                 htmlFor="imgUpload"
@@ -133,7 +133,7 @@ export function Writing() {
                 <ImageCard url={URL.createObjectURL(imgFile)} />
                 <button
                   className="absolute p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
-                  onClick={() => handleDeleteImage(index)}
+                  onClick={() => deleteImage(index)}
                 >
                   <img src={TrashCan} alt="trash" />
                 </button>
@@ -145,7 +145,7 @@ export function Writing() {
             type="text"
             placeholder="제목을 입력해주세요 (최대20글자)"
             maxLength="20"
-            className="text-[2.5rem] font-semibold border-none outline-none"
+            className="text-[2rem] font-semibold border-none outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
