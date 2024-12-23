@@ -8,8 +8,13 @@ import Arrow from "../imgs/arrow.svg";
 
 // Chating Components
 import { ChatingButton, Chat } from "../components/chatingList";
+import axios from "axios";
+import { url } from "./config";
 
 export function Chating() {
+  const [chatList, setChatList] = useState([]);
+
+  useEffect(getChatList, []);
   // 자동 줄바꿈
   const textarea = useRef();
   const textMaxLen = 300;
@@ -35,6 +40,12 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
+  function getChatList() {
+    axios.get(`${url}/chat/room/part`).then((res) => {
+      setChatList(res.data.result);
+    });
+  }
+
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
 
@@ -52,7 +63,11 @@ export function Chating() {
           <header>
             <h1 className="text-[24px] font-semibold p-[25px]">전체 채팅</h1>
           </header>
-          <main className="overflow-y-scroll no-scrollbar">{}</main>
+          <main className="overflow-y-scroll no-scrollbar">
+            {chatList.map((v) => {
+              <ChatingButton key={v.id} title={v.title} />;
+            })}
+          </main>
         </div>
 
         {/* 채팅창 */}

@@ -13,16 +13,13 @@ const chatings = {
 };
 
 // 선택된 채팅 목록
-export function ChatingButton({ isSelected, userInfo }) {
+export function ChatingButton({ isSelected, userInfo }, { title }) {
   return (
     <div className={`flex items-center p-4 ${colors[isSelected] || "bg"}`}>
       {/* svg 크기 72px*/}
       <img src={Profile} width="72" height="72" alt="profile" />
       <section className="pl-[15px]">
-        <h3 className="text-xl font-semibold">{/*이름추가*/}김지훈</h3>
-        <h4 className="text-xs font-medium text-[#555555]">
-          {/*상태추가*/}교동 짬뽕 듣는중
-        </h4>
+        <h3 className="text-xl font-semibold">{title}</h3>
       </section>
     </div>
   );
