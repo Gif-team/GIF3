@@ -129,15 +129,14 @@ export default function PostEdit({ postId }) {
     <div className="flex flex-col items-center w-full h-max">
       <Header />
       {alertPopUp && <AlertPopUp />}
-      <div className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center">
-        {/*게시물*/}
+      <main className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
         <div className="flex flex-col w-full gap-14">
           {/*이미지*/}
           <div className="flex w-full gap-[10px] overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
             <div
               className="flex items-center justify-center 
-            border border-gray-400 rounded-lg select-none
-            w-[150px] h-[150px] flex-shrink-0"
+              border border-gray-400 rounded-lg select-none
+              w-[150px] h-[150px] flex-shrink-0"
             >
               <input
                 type="file"
@@ -170,7 +169,7 @@ export default function PostEdit({ postId }) {
             type="text"
             placeholder="제목을 입력해주세요 (최대20글자)"
             maxLength="20"
-            className="text-[2.5rem] font-semibold border-none outline-none"
+            className="text-[2rem] font-semibold border-none outline-none leading-10 w-full"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -218,7 +217,7 @@ export default function PostEdit({ postId }) {
         </div>
         {/* 제출 */}
         <button
-          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] ${
+          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
             isFormValid ? "bg-opacity-100" : "bg-opacity-50"
           }`}
           disabled={!isFormValid}
@@ -226,7 +225,7 @@ export default function PostEdit({ postId }) {
         >
           추가하기
         </button>
-      </div>
+      </main>
     </div>
   );
 }
