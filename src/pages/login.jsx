@@ -22,6 +22,7 @@ export function Login() {
       })
       .then((res) => {
         navigate("/main");
+        localStorage.setItem("id", res.data.id);
       })
       .catch((err) => {
         setEmailError(true);
