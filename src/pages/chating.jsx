@@ -48,7 +48,7 @@ export function Chating() {
     <div className="flex flex-col items-center w-full h-[100vh]">
       <Header />
       {alertPopUp && <AlertPopUp />}
-      <div className="flex justify-center pt-[60px] h-full w-1/2">
+      <div className="flex justify-center pt-[60px] h-full w-3/5">
         {/* 전체채팅 */}
         <div className="flex flex-col w-2/5 h-full border border-gray-400">
           <header>
@@ -63,9 +63,9 @@ export function Chating() {
 
         {/* 채팅창 */}
         <div className="flex flex-col w-3/5 h-full border border-l-0 border-gray-400">
-          <header className="px-3 border-b-2">
-            <h2 className="text-xl font-bold">{/*이름추가*/}김지훈</h2>
-            <h4 className="text-xs font-medium">
+          <header className="px-3 py-4 border-b-2">
+            <h2 className="text-xl font-semibold">{/*이름추가*/}김지훈</h2>
+            <h4 className="text-xs font-medium text-[#555555]">
               {/*상태추가*/}교동 짬뽕 듣는중
             </h4>
           </header>
@@ -105,7 +105,7 @@ export function Chating() {
             </div>
             <button
               className="flex justify-center items-center 
-              bg-[#5956E8] rounded-[50%] w-[34px] h-[34px]"
+              bg-[#5956E8] rounded-[50%] w-12 h-12"
             >
               {/* 화살표 */}
               <img src={Arrow} alt="arrow" />

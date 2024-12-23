@@ -104,8 +104,7 @@ export function Writing() {
     <div className="flex flex-col items-center w-full h-max">
       <Header />
       {alertPopUp && <AlertPopUp />}
-      <div className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
-        {/* 게시믈 */}
+      <main className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
         <div className="flex flex-col w-full gap-14">
           {/* 이미지 */}
           <div className="flex space-x-2 overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
@@ -145,7 +144,7 @@ export function Writing() {
             type="text"
             placeholder="제목을 입력해주세요 (최대20글자)"
             maxLength="20"
-            className="text-[2rem] font-semibold border-none outline-none"
+            className="text-[2rem] font-semibold border-none leading-10 outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -195,7 +194,7 @@ export function Writing() {
 
         {/* 제출 */}
         <button
-          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] ${
+          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
             isFormValid ? "bg-opacity-100" : "bg-opacity-50"
           }`}
           disabled={!isFormValid}
@@ -203,7 +202,7 @@ export function Writing() {
         >
           추가하기
         </button>
-      </div>
+      </main>
     </div>
   );
 }
