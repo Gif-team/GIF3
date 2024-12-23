@@ -59,22 +59,14 @@ export function Detail() {
       });
   }
 
-  function like() {
-    axios.post(`${url}/post/${Param.id}/like`, {
-      like: likeBool,
-    });
-  }
-
-  function cancelLike() {
-    axios.delete(`${url}/post/${Param.id}/like`);
-  }
-
   const ToggleLike = () => {
     setLikeBool(!likeBool);
     if (likeBool === false) {
-      cancelLike();
+      axios.delete(`${url}/post/${Param.id}/like`);
     } else {
-      like();
+      axios.post(`${url}/post/${Param.id}/like`, {
+        like: likeBool,
+      });
     }
   };
 
@@ -98,21 +90,20 @@ export function Detail() {
 
   // 이미지
   const [imgCnt, setImgCnt] = useState(0);
-  const [imgSrc, setImgSrc] = useState(img || []);
 
   const LeftArrow = () => {
     if (imgCnt >= 1) {
       setImgCnt(imgCnt - 1);
     } else if (imgCnt === 0) {
       // 이미지가 더 이상 없을 때 전환
-      setImgCnt(imgSrc.length - 1);
+      setImgCnt(img.length - 1);
     }
   };
 
   const RightArrow = () => {
-    if (imgCnt < imgSrc.length - 1) {
+    if (imgCnt < img.length - 1) {
       setImgCnt(imgCnt + 1);
-    } else if (imgCnt === imgSrc.length - 1) {
+    } else if (imgCnt === img.length - 1) {
       // 이미지가 더 이상 없을 때 전환
       setImgCnt(0);
     }
@@ -148,7 +139,7 @@ export function Detail() {
           </svg>
           {/* 이미지 추가 (필수) */}
           <img
-            src={imgSrc[imgCnt]}
+            src={img[imgCnt]}
             alt="img"
             className="w-[550px] h-[550px] select-none rounded-2xl"
           />
