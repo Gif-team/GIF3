@@ -4,8 +4,6 @@ import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
 
-import Camera from "../imgs/camera.svg";
-import ImageBtn from "../imgs/image_btn.svg";
 import Arrow from "../imgs/arrow.svg";
 
 // Chating Components
@@ -54,11 +52,7 @@ export function Chating() {
           <header>
             <h1 className="text-[24px] font-semibold p-[25px]">전체 채팅</h1>
           </header>
-          <main className="overflow-y-scroll no-scrollbar">
-            {/* MAP함수 사용예정 */}
-            <ChatingButton isSelected="true" userInfo={"김지훈"} />
-            <ChatingButton />
-          </main>
+          <main className="overflow-y-scroll no-scrollbar">{}</main>
         </div>
 
         {/* 채팅창 */}
@@ -85,13 +79,12 @@ export function Chating() {
                 rows="1"
               />
               <div className="flex flex-col justify-between w-6 h-full align-middle">
-                <input type="file" id="fileUpload" className="hidden " />
-                <label htmlFor="fileUpload">
-                  <img src={ImageBtn} alt="image" className="cursor-pointer " />
-                </label>
-                {/* 카메라 */}
-                {/* <img src={Camera} alt="camera" /> */}
-                {/* 이미지 */}
+                <input
+                  type="file"
+                  id="fileUpload"
+                  max={300}
+                  className="hidden "
+                />
                 {textValue >= textMaxLen - 50 ? (
                   <span
                     className={`text-right ${
