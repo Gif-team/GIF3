@@ -20,25 +20,18 @@ export function Profile() {
 
   useEffect(() => {
     axios
-      .get(`${url}/api/auth/user`)
+      .get(`${url}/auth/user`)
       .then((res) => {
-        console.log(res);
-        const data = {
-          id: res.id,
-          username: res.username,
-          email: res.eamil,
-        };
-
-        setUserInfo(data);
+        console.log("응답:", res);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("에러:", err);
       });
   }, []);
 
   const MemberShipCancel = () => {
     axios
-      .delete(`${url}/api/auth/user/delete`)
+      .delete(`${url}/auth/user/delete`)
       .then((res) => {
         console.log(res);
         navigation("/login");
@@ -50,7 +43,7 @@ export function Profile() {
 
   const Logout = () => {
     axios
-      .post(`${url}/api/auth/logout`)
+      .post(`${url}/auth/logout`)
       .then((res) => {
         console.log(res);
         navigation("/login");
