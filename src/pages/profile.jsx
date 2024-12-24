@@ -20,14 +20,13 @@ export function Profile() {
 
   useEffect(() => {
     axios
-      .get(`${url}/auth/user`, {
-        withCredentials: true,
-      })
+      .get(`${url}/auth/user`, { withCredentials: true })
       .then((res) => {
-        console.log("응답:", res.data);
+        console.log(res.data);
+        setUserInfo(res.data);
       })
       .catch((err) => {
-        console.log("에러:", err);
+        console.log(err);
       });
   }, []);
 
@@ -63,7 +62,9 @@ export function Profile() {
         <div className="flex items-center pt-[10px]">
           {/* profile svg */}
           <img src={ProfileImg} alt="profile" width={128} height={128} />
-          <h1 className="ml-6 text-3xl font-bold">{userInfo.id}</h1>
+          <h1 className="ml-6 text-3xl font-bold">
+            {userInfo.username || " cannnot find"}
+          </h1>
           <ul className="flex flex-col items-center justify-center  bg-[#EFF0F2] ml-auto rounded-xl p-[24px] text-center">
             <li className="font-bold">프로필</li>
             <div className="bg-[#4f5665] w-full h-[1px] my-3"></div>
