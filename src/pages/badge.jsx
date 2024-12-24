@@ -19,6 +19,7 @@ export function Badge() {
         withCredentials: true,
       })
       .then((res) => {
+        console.log(res.data);
         setBadge(res.data);
       })
       .catch((err) => {
