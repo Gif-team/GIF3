@@ -4,14 +4,17 @@ import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
 
-import Camera from "../imgs/camera.svg";
-import ImageBtn from "../imgs/image_btn.svg";
 import Arrow from "../imgs/arrow.svg";
 
 // Chating Components
 import { ChatingButton, Chat } from "../components/chatingList";
+import axios from "axios";
+import { url } from "./config";
 
 export function Chating() {
+  const [chatList, setChatList] = useState([]);
+
+  useEffect(getChatList, []);
   // 자동 줄바꿈
   const textarea = useRef();
   const textMaxLen = 300;
@@ -37,6 +40,16 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
+  function getChatList() {
+    axios
+      .get(`${url}/chat/room/part`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setChatList(res.data.result);
+      });
+  }
+
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
 
@@ -48,24 +61,24 @@ export function Chating() {
     <div className="flex flex-col items-center w-full h-[100vh]">
       <Header />
       {alertPopUp && <AlertPopUp />}
-      <div className="flex justify-center pt-[60px] h-full w-1/2">
+      <div className="flex justify-center pt-[60px] h-full w-3/5">
         {/* 전체채팅 */}
         <div className="flex flex-col w-2/5 h-full border border-gray-400">
           <header>
             <h1 className="text-[24px] font-semibold p-[25px]">전체 채팅</h1>
           </header>
           <main className="overflow-y-scroll no-scrollbar">
-            {/* MAP함수 사용예정 */}
-            <ChatingButton isSelected="true" userInfo={"김지훈"} />
-            <ChatingButton />
+            {chatList.map((v) => {
+              <ChatingButton key={v.id} title={v.title} />;
+            })}
           </main>
         </div>
 
         {/* 채팅창 */}
         <div className="flex flex-col w-3/5 h-full border border-l-0 border-gray-400">
-          <header className="px-3 border-b-2">
-            <h2 className="text-xl font-bold">{/*이름추가*/}김지훈</h2>
-            <h4 className="text-xs font-medium">
+          <header className="px-3 py-4 border-b-2">
+            <h2 className="text-xl font-semibold">{/*이름추가*/}김지훈</h2>
+            <h4 className="text-xs font-medium text-[#555555]">
               {/*상태추가*/}교동 짬뽕 듣는중
             </h4>
           </header>
@@ -85,13 +98,12 @@ export function Chating() {
                 rows="1"
               />
               <div className="flex flex-col justify-between w-6 h-full align-middle">
-                <input type="file" id="fileUpload" className="hidden " />
-                <label htmlFor="fileUpload">
-                  <img src={ImageBtn} alt="image" className="cursor-pointer " />
-                </label>
-                {/* 카메라 */}
-                {/* <img src={Camera} alt="camera" /> */}
-                {/* 이미지 */}
+                <input
+                  type="file"
+                  id="fileUpload"
+                  max={300}
+                  className="hidden "
+                />
                 {textValue >= textMaxLen - 50 ? (
                   <span
                     className={`text-right ${
@@ -105,7 +117,7 @@ export function Chating() {
             </div>
             <button
               className="flex justify-center items-center 
-              bg-[#5956E8] rounded-[50%] w-[34px] h-[34px]"
+              bg-[#5956E8] rounded-[50%] w-12 h-12"
             >
               {/* 화살표 */}
               <img src={Arrow} alt="arrow" />

@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 function getDate(value) {
   const today = new Date();
-  const timeValue = new Date(value);
+  const timeValue = new Date(Math.floor(value));
 
   const betweenTime = Math.floor(
     (today.getTime() - timeValue.getTime()) / 1000 / 60
@@ -40,38 +40,48 @@ function where(lo) {
 }
 
 export function Detail() {
-  // 좋아요
   const [likeBool, setLikeBool] = useState(false);
   const [likeColor, setLikeColor] = useState("#E9E9E9");
   const [likeCount, setCount] = useState(0);
   const [data, setData] = useState([]);
+  const [img, setImg] = useState([]);
 
   const Param = useParams();
 
-  function like() {
-    axios.post(`${url}/post/${Param.id}/like`, {
-      like: likeBool,
-    });
-  }
-
-  function cancelLike() {
-    axios.delete(`${url}/post/${Param.id}/like`);
+  function getImage() {
+    axios
+      .get(`${url}/post/${Param.id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setImg(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const ToggleLike = () => {
     setLikeBool(!likeBool);
     if (likeBool === false) {
-      cancelLike();
+      axios.delete(`${url}/post/${Param.id}/like`);
     } else {
-      like();
+      axios.post(`${url}/post/${Param.id}/like`, {
+        like: likeBool,
+      });
     }
   };
 
   useEffect(() => {
-    axios.get(`${url}/post/${Param.id}`).then((res) => {
-      setData(res.data);
-      setCount(res.data.LikeNumber);
-    });
+    axios
+      .get(`${url}/post/${Param.id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setData(res.data);
+        setCount(res.data.LikeNumber);
+        getImage();
+      });
   }, [Param.id]);
 
   useEffect(() => {
@@ -86,30 +96,24 @@ export function Detail() {
 
   // 이미지
   const [imgCnt, setImgCnt] = useState(0);
-  const [imgSrc, setImgSrc] = useState(data.image || []);
 
   const LeftArrow = () => {
     if (imgCnt >= 1) {
       setImgCnt(imgCnt - 1);
     } else if (imgCnt === 0) {
       // 이미지가 더 이상 없을 때 전환
-      setImgCnt(imgSrc.length - 1);
+      setImgCnt(img.length - 1);
     }
   };
 
   const RightArrow = () => {
-    if (imgCnt < imgSrc.length - 1) {
+    if (imgCnt < img.length - 1) {
       setImgCnt(imgCnt + 1);
-    } else if (imgCnt === imgSrc.length - 1) {
+    } else if (imgCnt === img.length - 1) {
       // 이미지가 더 이상 없을 때 전환
       setImgCnt(0);
     }
   };
-
-  useEffect(() => {
-    setImgSrc(imgSrc[imgCnt]);
-  }, [imgCnt]);
-
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
@@ -141,7 +145,7 @@ export function Detail() {
           </svg>
           {/* 이미지 추가 (필수) */}
           <img
-            src={imgSrc}
+            src={img[imgCnt]}
             alt="img"
             className="w-[550px] h-[550px] select-none rounded-2xl"
           />

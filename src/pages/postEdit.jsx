@@ -51,13 +51,17 @@ export default function PostEdit({ postId }) {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const { data: fileNames } = await axios.get(`/api/images/${postId}`);
+        const { data: fileNames } = await axios.get(`/api/images/${postId}`, {
+          withCredentials: true,
+        });
 
         const imageUrls = await Promise.all(
           fileNames.map(async (fileName) => {
             const {
               data: { url },
-            } = await axios.get(`/api/image-url/${fileName}`);
+            } = await axios.get(`/api/image-url/${fileName}`, {
+              withCredentials: true,
+            });
             return url;
           })
         );
