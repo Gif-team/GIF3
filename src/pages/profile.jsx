@@ -20,9 +20,11 @@ export function Profile() {
 
   useEffect(() => {
     axios
-      .get(`${url}/auth/user`)
+      .get(`${url}/auth/user`, {
+        withCredentials: true,
+      })
       .then((res) => {
-        console.log("응답:", res);
+        console.log("응답:", res.data);
       })
       .catch((err) => {
         console.log("에러:", err);
@@ -33,7 +35,7 @@ export function Profile() {
     axios
       .delete(`${url}/auth/user/delete`)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         navigation("/login");
       })
       .catch((err) => {
@@ -45,7 +47,7 @@ export function Profile() {
     axios
       .post(`${url}/auth/logout`)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         navigation("/login");
       })
       .catch((err) => {
