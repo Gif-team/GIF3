@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Header } from "../components/header";
-import { AlertContext } from "../context/alertContext";
-import { AlertPopUp } from "../components/alertPopUp";
-import axios from "axios";
-import { url } from "./config";
 import { useParams } from "react-router-dom";
 
-function getDate(value) {
+import axios from "axios";
+import { url } from "./config";
+import { AlertPopUp } from "../components/alertPopUp";
+import { AlertContext } from "../context/alertContext";
+import { Header } from "../components/header";
+
+import { ReactComponent as Heart } from "../imgs/heart.svg";
+import Profile from "../imgs/profile.svg";
+
+const getDate = (value) => {
   const today = new Date();
   const timeValue = new Date(Math.floor(value));
 
@@ -29,93 +33,102 @@ function getDate(value) {
   }
 
   return `${Math.floor(betweenTimeDay / 365)}년전`;
-}
+};
 
-function where(lo) {
+const where = (lo) => {
   if (lo === 1) {
     return "기숙사";
   } else if (lo === 2) {
     return "본관";
-  } else return "금봉관";
-}
+  } else {
+    return "금봉관";
+  }
+};
 
 export function Detail() {
-  const [likeBool, setLikeBool] = useState(false);
-  const [likeColor, setLikeColor] = useState("#E9E9E9");
-  const [likeCount, setCount] = useState(0);
-  const [data, setData] = useState([]);
-  const [img, setImg] = useState([]);
-
   const Param = useParams();
 
-  function getImage() {
+  const [likeBool, setLikeBool] = useState(false);
+  const [likeColor, setLikeColor] = useState("#E9E9E9");
+  const [likeCount, setLikeCount] = useState(0);
+  const [mount, setMount] = useState(false);
+
+  const [img, setImg] = useState([]);
+  const [imgCnt, setImgCnt] = useState(0);
+
+  const [data, setData] = useState([]);
+
+  // 알림
+  const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
+
+  const ToggleLike = () => {
+    setLikeBool(!likeBool);
+  };
+
+  // 좋아요 로직
+  useEffect(() => {
+    if (mount == true) {
+      setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
+      setLikeCount(likeBool ? likeCount + 1 : likeCount - 1);
+
+      likeBool
+        ? axios
+            .post(
+              `${url}/post/${Param.id}/like`,
+              { like: likeBool },
+              { withCredentials: true }
+            )
+            .catch((err) => console.log(err))
+        : axios
+            .delete(`${url}/post/${Param.id}/like`, { withCredentials: true })
+            .catch((err) => console.log(err));
+    } else {
+      setMount(true);
+    }
+  }, [likeBool]);
+
+  // 이미지 전환
+  const changeImage = (direction) => {
+    if (direction === "left") {
+      setImgCnt((prev) => (prev === 0 ? img.length - 1 : prev - 1));
+    } else if (direction === "right") {
+      setImgCnt((prev) => (prev === img.length - 1 ? 0 : prev + 1));
+    }
+  };
+
+  // 이미지 요청
+  const getImage = () => {
     axios
-      .get(`${url}/post/${Param.id}`, {
-        withCredentials: true,
-      })
+      .get(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
         setImg(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  const ToggleLike = () => {
-    setLikeBool(!likeBool);
-    if (likeBool === false) {
-      axios.delete(`${url}/post/${Param.id}/like`);
-    } else {
-      axios.post(`${url}/post/${Param.id}/like`, {
-        like: likeBool,
-      });
-    }
   };
 
+  // 데이터 요청
   useEffect(() => {
     axios
-      .get(`${url}/post/${Param.id}`, {
-        withCredentials: true,
-      })
+      .get(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
         setData(res.data);
-        setCount(res.data.LikeNumber);
+        setLikeCount(res.data.LikeNumber);
         getImage();
       });
   }, [Param.id, getImage]);
 
-  useEffect(() => {
-    if (likeBool === true) {
-      setCount(likeCount + 1);
-      setLikeColor("#ff6969");
-    } else if (likeBool === false && likeCount >= 1) {
-      setCount(likeCount - 1);
-      setLikeColor("#E9E9E9");
-    }
-  }, [likeBool, likeCount]);
-
-  // 이미지
-  const [imgCnt, setImgCnt] = useState(0);
-
-  const LeftArrow = () => {
-    if (imgCnt >= 1) {
-      setImgCnt(imgCnt - 1);
-    } else if (imgCnt === 0) {
-      // 이미지가 더 이상 없을 때 전환
-      setImgCnt(img.length - 1);
-    }
+  const Chat = () => {
+    axios
+      .post(`${url}/chat/room`, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-
-  const RightArrow = () => {
-    if (imgCnt < img.length - 1) {
-      setImgCnt(imgCnt + 1);
-    } else if (imgCnt === img.length - 1) {
-      // 이미지가 더 이상 없을 때 전환
-      setImgCnt(0);
-    }
-  };
-  // 알림
-  const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -126,7 +139,7 @@ export function Detail() {
           {/* 왼쪽 화살표 */}
           <svg
             className="cursor-pointer"
-            onClick={LeftArrow}
+            onClick={() => changeImage("left")}
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -147,7 +160,7 @@ export function Detail() {
           {/* 오른쪽 화살표 */}
           <svg
             className="cursor-pointer"
-            onClick={RightArrow}
+            onClick={() => changeImage("right")}
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -161,31 +174,42 @@ export function Detail() {
           </svg>
         </div>
 
-        <h1 className="text-xl font-semibold text-center">{data.title}</h1>
-        <div className="text-sm text-center">
-          {data.writer} | {where(data.loc)} | {getDate(data.createdAt)}
-        </div>
-
-        {/* 좋아요 버튼 */}
-        <div className="flex items-center justify-center mt-[10px]">
-          <svg
-            onClick={ToggleLike}
-            xmlns="http://www.w3.org/2000/svg"
-            width="27"
-            height="24"
-            viewBox="0 0 27 24"
-            fill={likeColor}
+        <header className="flex items-center w-full gap-6 text-">
+          <img src={Profile} className="w-9 h-9" />
+          <div className="py-8 text-xl font-bold">{data.writer}</div>
+          <button
+            className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
+            onClick={Chat}
           >
-            <path
-              d="M23.2265 3.76815C22.6645 3.20759 21.9972 2.76292 21.2628 2.45954C20.5284 2.15615 19.7412 2 18.9463 2C18.1513 2 17.3641 2.15615 16.6297 2.45954C15.8953 2.76292 15.228 3.20759 14.666 3.76815L13.4997 4.93095L12.3334 3.76815C11.1982 2.6364 9.65854 2.00059 8.05315 2.00059C6.44775 2.00059 4.90811 2.6364 3.77293 3.76815C2.63774 4.89989 2 6.43487 2 8.03541C2 9.63594 2.63774 11.1709 3.77293 12.3027L4.93926 13.4655L13.4997 22L22.0602 13.4655L23.2265 12.3027C23.7887 11.7424 24.2348 11.0771 24.5391 10.3449C24.8434 9.61276 25 8.82796 25 8.03541C25 7.24285 24.8434 6.45806 24.5391 5.72587C24.2348 4.99368 23.7887 4.32844 23.2265 3.76815Z"
-              stroke={likeColor}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <p>{likeCount}개</p>
-        </div>
+            채팅하기
+          </button>
+        </header>
+        <div className="w-full h-[2px] bg-primary-primary"></div>
+        <main className="flex flex-col w-full gap-8 px-1 pt-6">
+          <div className="flex">
+            {/* 내용 */}
+            <section className="flex flex-col gap-3">
+              <h1 className="text-2xl font-bold">{data.title}</h1>
+              <p className="text-sm font-bold text-gray-400">
+                {data.Category || "잃어버렸습니다 "}
+                {data.realTime || "2시간전"}
+              </p>
+              <p className="text-base font-bold">
+                사례금 : {data.Price || "2000원"}
+              </p>
+            </section>
+            {/* 좋아요 */}
+            <section className="flex items-center gap-3 ml-auto h-max">
+              <Heart onClick={ToggleLike} stroke={likeColor} />
+              <p className="text-2xl font-black text-gray-500">
+                {likeCount || 0}
+              </p>
+            </section>
+          </div>
+          <p className="text-sm font-normal">
+            {data.Content || "투명 케이스에 들어있습니다."}
+          </p>
+        </main>
       </div>
     </div>
   );

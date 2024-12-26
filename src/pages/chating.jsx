@@ -63,9 +63,9 @@ export function Chating() {
             <h1 className="text-[24px] font-semibold p-[25px]">전체 채팅</h1>
           </header>
           <main className="overflow-y-scroll no-scrollbar">
-            {chatList.map((v) => {
+            {/* {chatList.map((v) => {
               return <ChatingButton key={v.id} title={v.title} />;
-            })}
+            })} */}
           </main>
         </div>
 
