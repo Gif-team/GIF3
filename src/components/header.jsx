@@ -21,6 +21,7 @@ export function Header() {
       <section className="flex items-center justify-center flex-1">
         <div className="relative">
           <img
+            alt="search"
             src={searchIcon}
             className="absolute transform -translate-y-1/2 top-5 left-2"
           />
