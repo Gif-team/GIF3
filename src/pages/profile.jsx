@@ -63,7 +63,7 @@ export function Profile() {
           {/* profile svg */}
           <img src={ProfileImg} alt="profile" width={128} height={128} />
           <h1 className="ml-6 text-3xl font-bold">
-            {userInfo.username || " cannnot find"}
+            {userInfo.username || "cannnot find"}
           </h1>
           <ul className="flex flex-col items-center justify-center  bg-[#EFF0F2] ml-auto rounded-xl p-[24px] text-center">
             <li className="font-bold">프로필</li>
