@@ -7,14 +7,14 @@ import { AlertPopUp } from "../components/alertPopUp";
 import Arrow from "../imgs/arrow.svg";
 
 // Chating Components
-import { ChatingButton, Chat } from "../components/chatingList";
+import { ChatingList } from "../components/chatingList";
+import { ChatingTo } from "../components/chating";
 import axios from "axios";
 import { url } from "./config";
 
 export function Chating() {
   const [chatList, setChatList] = useState([]);
 
-  useEffect(getChatList, []);
   // 자동 줄바꿈
   const textarea = useRef();
   const textMaxLen = 300;
@@ -40,15 +40,18 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
-  function getChatList() {
-    axios
-      .get(`${url}/chat/room/part`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setChatList(res.data.result);
-      });
-  }
+  useEffect(() => {
+    // 자신이 속한 채팅방 조회
+    const getChatList = () => {
+      axios
+        .get(`${url}/chat/room/part`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          setChatList(res.data.result);
+        });
+    };
+  }, []);
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
@@ -64,8 +67,11 @@ export function Chating() {
           </header>
           <main className="overflow-y-scroll no-scrollbar">
             {/* {chatList.map((v) => {
-              return <ChatingButton key={v.id} title={v.title} />;
+              return <ChatingList key={v.id} title={v.title} />;
             })} */}
+
+            {/* 선택되어 있는 방이라면 회색으로 */}
+            <ChatingList title={"title"} isSelected={true} />
           </main>
         </div>
 
@@ -79,8 +85,8 @@ export function Chating() {
           </header>
           <main className="flex flex-col flex-1 max-h-full overflow-y-scroll no-scrollbar">
             {/* MAP함수 사용예정 */}
-            <Chat whose="other" text={"교동 짬뽕 듣는중"} />
-            <Chat whose="my" text={"오"} />
+            <ChatingTo whose="other" text={"교동 짬뽕 듣는중"} />
+            <ChatingTo whose="my" text={"오"} />
           </main>
           <footer className="flex justify-center items-center border-t border-[#C4C4C4] px-3 py-5">
             <div className="flex justify-around items-start bg-[#F0F0F0] px-5 py-3 flex-grow rounded-3xl h-full">

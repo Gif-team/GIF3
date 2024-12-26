@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { url } from "./config";
@@ -47,6 +47,7 @@ const where = (lo) => {
 
 export function Detail() {
   const Param = useParams();
+  const navigate = useNavigate();
 
   const [likeBool, setLikeBool] = useState(false);
   const [likeColor, setLikeColor] = useState("#E9E9E9");
@@ -128,6 +129,15 @@ export function Detail() {
       .catch((err) => {
         console.log(err);
       });
+    navigate("/chating");
+  };
+
+  // 끌어올리기
+  const PullPost = () => {
+    axios
+      .post(`${url}/post/${data.postId}`, { withCredentials: true })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -177,12 +187,30 @@ export function Detail() {
         <header className="flex items-center w-full gap-6 text-">
           <img src={Profile} className="w-9 h-9" />
           <div className="py-8 text-xl font-bold">{data.writer}</div>
-          <button
-            className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
-            onClick={Chat}
-          >
-            채팅하기
-          </button>
+          {/* 조회인이 나인지 타인인지  */}
+          {(
+            <button
+              className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
+              onClick={Chat}
+            >
+              채팅하기
+            </button>
+          ) || (
+            <div className="flex gap-3 ml-auto">
+              <button
+                className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
+                onClick={() => navigate(`/postEdit${data.postId}`)}
+              >
+                수정하기
+              </button>
+              <button
+                className="px-4 py-3 bg-white border text-primary-primary border-primary-primary rounded-3xl"
+                onClick={PullPost}
+              >
+                끌어올리기
+              </button>
+            </div>
+          )}
         </header>
         <div className="w-full h-[2px] bg-primary-primary"></div>
         <main className="flex flex-col w-full gap-8 px-1 pt-6">
