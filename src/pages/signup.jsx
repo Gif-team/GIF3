@@ -26,6 +26,7 @@ export function SignUp() {
         password: password,
       })
       .then((res) => {
+        console.log(res.data);
         navigate("/login");
       })
       .catch((err) => {

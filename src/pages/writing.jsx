@@ -59,49 +59,23 @@ export function Writing() {
 
   // 게시물 제출
   const writePost = async () => {
-    try {
-      const data = {
-        title,
-        price: Number(amount),
-        content: description,
-        category: Boolean(!lostItems.indexOf(selectedLostItem)),
-        building: {
-          id: gwans.indexOf(selectedGwan) + 1,
-          floor:
-            selectedGwan === "기숙사"
-              ? floors.indexOf(selectedFloor) + 1
-              : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
-        },
-        images: [],
-      };
-
-      // 이미지 업로드 기능
-      for (let file of imgFiles) {
-        // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
-        const presignedUrl = await axios.post(`${url}/api/s3/presigned-url`, {
-          fileName: file.name,
-          fileType: file.type,
-        });
-
-        // 2. 받아온 url로 파일을 보냄
-        await axios.put(
-          presignedUrl,
-          file,
-          {
-            withCredentials: true,
+    axios
+      .post(
+        `${url}/post/create`,
+        {
+          title,
+          price: Number(amount),
+          content: description,
+          category: Boolean(!lostItems.indexOf(selectedLostItem)),
+          building: {
+            id: gwans.indexOf(selectedGwan) + 1,
+            floor:
+              selectedGwan === "기숙사"
+                ? floors.indexOf(selectedFloor) + 1
+                : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
           },
-          {
-            headers: { "Content-Type": file.type },
-          }
-        );
+        },
 
-        const imgUrl = await axios.get(`${url}/api/image-url/${file.name}`);
-        data.images.push(imgUrl);
-      }
-
-      await axios.post(`${url}/api/post/create`, data);
-    } catch (error) {
-      console.error(error);
     }
   };
 
