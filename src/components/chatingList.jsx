@@ -31,7 +31,7 @@ export function Chat({ whose, text }) {
     <>
       <div
         className={`flex ${
-          whose == "other" ? "" : "flex-row-reverse"
+          whose === "other" ? "" : "flex-row-reverse"
         } items-start p-4`}
       >
         {/* svg 크기 32px*/}
