@@ -4,14 +4,17 @@ import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
 
-import Camera from "../imgs/camera.svg";
-import ImageBtn from "../imgs/image_btn.svg";
 import Arrow from "../imgs/arrow.svg";
 
 // Chating Components
 import { ChatingButton, Chat } from "../components/chatingList";
+import axios from "axios";
+import { url } from "./config";
 
 export function Chating() {
+  const [chatList, setChatList] = useState([]);
+
+  useEffect(getChatList, []);
   // 자동 줄바꿈
   const textarea = useRef();
   const textMaxLen = 300;
@@ -37,6 +40,16 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
+  function getChatList() {
+    axios
+      .get(`${url}/chat/room/part`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setChatList(res.data.result);
+      });
+  }
+
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
 
@@ -55,9 +68,9 @@ export function Chating() {
             <h1 className="text-[24px] font-semibold p-[25px]">전체 채팅</h1>
           </header>
           <main className="overflow-y-scroll no-scrollbar">
-            {/* MAP함수 사용예정 */}
-            <ChatingButton isSelected="true" userInfo={"김지훈"} />
-            <ChatingButton />
+            {chatList.map((v) => {
+              <ChatingButton key={v.id} title={v.title} />;
+            })}
           </main>
         </div>
 
@@ -85,13 +98,12 @@ export function Chating() {
                 rows="1"
               />
               <div className="flex flex-col justify-between w-6 h-full align-middle">
-                <input type="file" id="fileUpload" className="hidden " />
-                <label htmlFor="fileUpload">
-                  <img src={ImageBtn} alt="image" className="cursor-pointer " />
-                </label>
-                {/* 카메라 */}
-                {/* <img src={Camera} alt="camera" /> */}
-                {/* 이미지 */}
+                <input
+                  type="file"
+                  id="fileUpload"
+                  max={300}
+                  className="hidden "
+                />
                 {textValue >= textMaxLen - 50 ? (
                   <span
                     className={`text-right ${

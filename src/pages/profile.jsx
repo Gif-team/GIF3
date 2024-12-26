@@ -1,4 +1,3 @@
-import React from "react";
 import { useContext, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
@@ -7,22 +6,35 @@ import { Post } from "../components/post";
 import ProfileImg from "../imgs/profile.svg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { url } from "./config";
 
 export function Profile() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [open, setOpen] = useState(alertPopUp);
   const navigation = useNavigate();
+  const [userInfo, setUserInfo] = useState([]);
 
   useEffect(() => {
     setOpen(alertPopUp);
   }, [alertPopUp]);
 
-  const MemberShipCancel = () => {
-    const url = "/api/auth/user/delete";
+  useEffect(() => {
     axios
-      .delete(url)
+      .get(`${url}/auth/user`, { withCredentials: true })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+        setUserInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const MemberShipCancel = () => {
+    axios
+      .delete(`${url}/auth/user/delete`)
+      .then((res) => {
+        console.log(res.data);
         navigation("/login");
       })
       .catch((err) => {
@@ -31,11 +43,10 @@ export function Profile() {
   };
 
   const Logout = () => {
-    const url = "/api/auth/logout";
     axios
-      .post(url)
+      .post(`${url}/auth/logout`)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         navigation("/login");
       })
       .catch((err) => {
@@ -51,7 +62,9 @@ export function Profile() {
         <div className="flex items-center pt-[10px]">
           {/* profile svg */}
           <img src={ProfileImg} alt="profile" width={128} height={128} />
-          <h1 className="ml-6 text-3xl font-bold">김지훈</h1>
+          <h1 className="ml-6 text-3xl font-bold">
+            {userInfo.username || "cannnot find"}
+          </h1>
           <ul className="flex flex-col items-center justify-center  bg-[#EFF0F2] ml-auto rounded-xl p-[24px] text-center">
             <li className="font-bold">프로필</li>
             <div className="bg-[#4f5665] w-full h-[1px] my-3"></div>

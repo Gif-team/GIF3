@@ -17,13 +17,16 @@ export function Main({ search }) {
   const [filter, setFilter] = useState(false);
   const [posts, setPosts] = useState([]);
   const navigator = useNavigate();
+
   useEffect(() => {
     setOpen(alertPopUp);
   }, [alertPopUp]);
+
   useEffect(() => {
     axios
-      .get(`${url}/post`)
+      .get(`${url}/post`, { withCredentials: true })
       .then((res) => {
+        console.log(res.data);
         setPosts(res.data);
       })
       .catch((err) => {

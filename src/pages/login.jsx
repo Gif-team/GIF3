@@ -16,12 +16,21 @@ export function Login() {
 
   function send() {
     axios
-      .post(`${url}/auth/login`, {
-        email: email,
-        password: password,
-      })
+      .post(
+        `${url}/auth/login`,
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
-        navigate("/main");
+        if (res.data.isSuccess == true) {
+          console.log(res.data.isSuccess);
+          navigate("/main");
+        } else {
+          console.log(res.data.errorMessage);
+        }
       })
       .catch((err) => {
         setEmailError(true);

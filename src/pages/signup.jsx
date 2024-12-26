@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import blueLogo from "../imgs/logo1.svg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { url } from "./config";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@gsm\.hs\.kr$/i;
 const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
-const url = "";
 
 export function SignUp() {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ export function SignUp() {
         password: password,
       })
       .then((res) => {
+        console.log(res.data);
         navigate("/login");
       })
       .catch((err) => {
