@@ -37,7 +37,7 @@ export function FilterPopup({ setFilter }) {
       setSelectedGwan(gwans[building_Id - 1]);
       setSelectedFloor(floors[floor - 1]);
     }
-  }, []);
+  }, [floors, gwans, lostItems]);
 
   // 필터 적용하기, 배열이름.indexOf(찾고싶은 값)
   const handleApply = () => {
