@@ -82,7 +82,7 @@ export function Detail() {
         setCount(res.data.LikeNumber);
         getImage();
       });
-  }, [Param.id]);
+  }, [Param.id, getImage]);
 
   useEffect(() => {
     if (likeBool === true) {
@@ -92,7 +92,7 @@ export function Detail() {
       setCount(likeCount - 1);
       setLikeColor("#E9E9E9");
     }
-  }, [likeBool]);
+  }, [likeBool, likeCount]);
 
   // 이미지
   const [imgCnt, setImgCnt] = useState(0);
@@ -116,11 +116,6 @@ export function Detail() {
   };
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
-
-  useEffect(() => {
-    setOpen(alertPopUp);
-  }, [alertPopUp]);
 
   return (
     <div className="flex flex-col items-center w-full">
