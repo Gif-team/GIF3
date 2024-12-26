@@ -51,11 +51,6 @@ export function Chating() {
   }
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
-
-  useEffect(() => {
-    setOpen(alertPopUp);
-  }, [alertPopUp]);
 
   return (
     <div className="flex flex-col items-center w-full h-[100vh]">
@@ -69,7 +64,7 @@ export function Chating() {
           </header>
           <main className="overflow-y-scroll no-scrollbar">
             {chatList.map((v) => {
-              <ChatingButton key={v.id} title={v.title} />;
+              return <ChatingButton key={v.id} title={v.title} />;
             })}
           </main>
         </div>
@@ -107,7 +102,7 @@ export function Chating() {
                 {textValue >= textMaxLen - 50 ? (
                   <span
                     className={`text-right ${
-                      textValue == textMaxLen ? "text-red-400" : ""
+                      textValue === textMaxLen ? "text-red-400" : ""
                     }`}
                   >
                     {textValue}
