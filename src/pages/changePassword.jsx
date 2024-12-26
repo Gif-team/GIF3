@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import blueLogo from "../imgs/logo1.svg";
 import axios from "axios";
+import { url } from "./config";
 
 const passwordregex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
 
