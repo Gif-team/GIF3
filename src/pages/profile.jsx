@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
-import { Post } from "../components/post";
 import ProfileImg from "../imgs/profile.svg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,12 +9,11 @@ import { url } from "./config";
 
 export function Profile() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
   const navigation = useNavigate();
   const [userInfo, setUserInfo] = useState([]);
 
   useEffect(() => {
-    setOpen(alertPopUp);
+    setAlertPopUp(alertPopUp);
   }, [alertPopUp]);
 
   useEffect(() => {
