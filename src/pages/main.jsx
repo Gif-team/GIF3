@@ -9,18 +9,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FilterPopup } from "../components/filterPopup";
 
-const filter = localStorage.getItem("filter");
-
 export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
   const [filter, setFilter] = useState(false);
   const [posts, setPosts] = useState([]);
   const navigator = useNavigate();
-
-  useEffect(() => {
-    setOpen(alertPopUp);
-  }, [alertPopUp]);
 
   useEffect(() => {
     axios
@@ -38,7 +31,7 @@ export function Main({ search }) {
     <div className="flex flex-col items-center w-full ">
       {filter ? <FilterPopup setFilter={setFilter} /> : null}
       <Header />
-      {open ? <AlertPopUp /> : null}
+      {alertPopUp ? <AlertPopUp /> : null}
       <div className="w-[60%] flex flex-col">
         <h1 className="m-5 mt-20 text-2xl font-bold">최신 게시물</h1>
         <div className="flex flex-wrap">
