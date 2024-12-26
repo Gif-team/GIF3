@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import blueLogo from "../imgs/logo1.svg";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const passwordregex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
-const url = "";
 
 export function ChangePassword() {
-  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheckError, setPasswordCheckError] = useState(false);
@@ -24,7 +21,7 @@ export function ChangePassword() {
   const handleCheckPasswordChange = (e) => {
     const value = e.target.value;
     setCheckPassword(value);
-    setPasswordError(password == checkPassword);
+    setPasswordCheckError(password == checkPassword);
   };
 
   function send() {

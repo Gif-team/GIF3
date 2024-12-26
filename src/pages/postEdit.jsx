@@ -15,7 +15,6 @@ import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostEdit({ postId }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -28,11 +27,6 @@ export default function PostEdit({ postId }) {
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
   const floors = ["1층", "2층", "3층", "4층", "5층"];
-
-  // 알림 팝업
-  useEffect(() => {
-    setOpen(alertPopUp);
-  }, [alertPopUp]);
 
   // 이미지 배열에 추가 (업로드는 제출 시 진행)
   const addImage = async () => {

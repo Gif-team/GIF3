@@ -6,7 +6,7 @@ export function ImageCard({ url }) {
       w-[150px] h-[150px] overflow-hidden flex-shrink-0"
     >
       <img
-        alt="image"
+        alt="이미지"
         src={url ? url : null}
         className="object-cover w-full h-full"
       />

@@ -36,7 +36,7 @@ export function Badge() {
         <div className="flex gap-20">
           <div className="flex flex-col items-center gap-1">
             {badge.badge1 ? (
-              <img className="w-[140px] h-[150px]" src={Find} />
+              <img alt="찾기왕" className="w-[140px] h-[150px]" src={Find} />
             ) : (
               <BadgeIcon />
             )}

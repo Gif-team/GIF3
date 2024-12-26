@@ -55,7 +55,7 @@ export function Post({ post, filter, search }) {
     if (filter.floor !== null && post.floor !== filter) {
       setHidden(true);
     }
-  }, [filter, search]);
+  }, [filter, search, post.building, post.category, post.floor, post.title]);
   return (
     <div
       onClick={() => nav(`/posts/${post.id}`)}
