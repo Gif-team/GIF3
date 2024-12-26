@@ -16,7 +16,6 @@ import TrashCan from "../imgs/trashcan.svg";
 
 export function Writing() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [open, setOpen] = useState(alertPopUp);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -32,7 +31,7 @@ export function Writing() {
 
   // 알림 팝업
   useEffect(() => {
-    setOpen(alertPopUp);
+    setAlertPopUp(alertPopUp);
   }, [alertPopUp]);
 
   // 이미지 배열에 추가 (업로드는 제출 시 진행)
@@ -75,7 +74,27 @@ export function Writing() {
                 : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
           },
         },
+        { withCredentials: true }
+      )
+      .then((res) => {})
+      .catch((err) => {});
 
+    // 이미지 업로드 기능
+    for (let file of imgFiles) {
+      // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
+      const presignedUrl = axios.post(
+        `${url}/s3/presigned-url`,
+        {
+          fileName: file.name,
+          fileType: file.type,
+        },
+        { withCredentials: true }
+      );
+
+      // 2. 받아온 url로 파일을 보냄
+      axios.put(presignedUrl, file, { withCredentials: true });
+
+      const imgUrl = axios.post(`${url}/image/save-image`);
     }
   };
 
