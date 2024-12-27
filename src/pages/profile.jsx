@@ -21,7 +21,7 @@ export function Profile() {
       .get(`${url}/auth/user`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        setUserInfo(res.data);
+        setUserInfo(res.data.result);
       })
       .catch((err) => {
         console.log(err);
