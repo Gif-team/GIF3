@@ -14,6 +14,12 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
+//CHECKLIST
+/**
+ * [ ] put 바꾸기
+ * [ ] z-index 조정
+ */
+
 export function Writing() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [title, setTitle] = useState("");
@@ -58,8 +64,8 @@ export function Writing() {
 
   // 게시물 제출
   const writePost = async () => {
-    axios
-      .post(
+    try {
+      const postResponse = await axios.post(
         `${url}/post/create`,
         {
           title,
@@ -75,26 +81,36 @@ export function Writing() {
           },
         },
         { withCredentials: true }
-      )
-      .then((res) => {})
-      .catch((err) => {});
-
-    // 이미지 업로드 기능
-    for (let file of imgFiles) {
-      // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
-      const presignedUrl = axios.post(
-        `${url}/s3/presigned-url`,
-        {
-          fileName: file.name,
-          fileType: file.type,
-        },
-        { withCredentials: true }
       );
 
-      // 2. 받아온 url로 파일을 보냄
-      axios.put(presignedUrl, file, { withCredentials: true });
+      const postId = postResponse.data.result.id; // 서버로부터 받은 postId 저장
 
-      const imgUrl = axios.post(`${url}/image/save-image`);
+      // 이미지 업로드 기능
+      for (let file of imgFiles) {
+        // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
+        const presignedUrlResponse = await axios.post(
+          `${url}/s3/presigned-url`,
+          {
+            fileName: file.name,
+            fileType: file.type,
+          },
+          { withCredentials: true }
+        );
+
+        const presignedUrl = presignedUrlResponse.data.url;
+
+        // 2. 받아온 url로 파일을 보냄
+        await axios.put(presignedUrl, file, { withCredentials: true });
+
+        // 3. 이미지 속성 db에 저장
+        await axios.post(
+          `${url}/image/save-image`,
+          { postId: postId, fileName: file.name },
+          { withCredentials: true }
+        );
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -126,14 +142,14 @@ export function Writing() {
               </label>
             </div>
             {imgFiles.map((imgFile, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative z-10">
                 <ImageCard url={URL.createObjectURL(imgFile)} />
-                <button
-                  className="absolute p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
+                <img
+                  src={TrashCan}
+                  alt="trash"
                   onClick={() => deleteImage(index)}
-                >
-                  <img src={TrashCan} alt="trash" />
-                </button>
+                  className="absolute cursor-pointer p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
+                />
               </div>
             ))}
           </div>

@@ -23,7 +23,10 @@ import { url } from "./config";
  */
 
 export function Chating() {
+  const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
+
   const [chatList, setChatList] = useState([]);
+  const [chatMsg, setChatMsg] = useState([]);
 
   // 자동 줄바꿈
   const textarea = useRef();
@@ -50,7 +53,7 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
-  // 자신이 속한 채팅방 조회
+  // 자신이 속한 채팅방 목록 조회 (왼쪽 채팅방 목록)
   useEffect(() => {
     const getChatList = () => {
       axios
@@ -63,8 +66,18 @@ export function Chating() {
     };
   }, []);
 
-  const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
+  // 채팅 메시지 조회 (오른쪽 채팅방 자신, 상대방 채팅)
+  useEffect(() => {
+    axios
+      .get(`${url}/chat/msg/${chatList.id}`, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+        setChatMsg(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
+  // 채팅 메시지 보내기 (오른쪽 채팅방 자신, 상대방 채팅)
   const chatingPost = (event) => {
     if (event.key === "Enter") {
       if (event.shiftKey) {
@@ -113,10 +126,9 @@ export function Chating() {
           </header>
           <main className="flex flex-col flex-1 max-h-full overflow-y-scroll no-scrollbar">
             {/* 채팅방 메시지 조회 MAP함수 사용예정 */}
-
-            <ChatingTo whose="other" text={"교동 짬뽕 듣는중"} />
-            <ChatingTo whose="other" text={"교동 짬뽕 듣는중"} />
-            <ChatingTo whose="my" text={"오"} />
+            {chatMsg.map((v) => {
+              <ChatingTo key={v.id} msg={v.msg} />;
+            })}
           </main>
           <form className="flex justify-center items-center border-t border-[#C4C4C4] px-3 py-5">
             <div className="flex justify-around items-start bg-[#F0F0F0] px-5 py-3 flex-grow rounded-3xl h-full">

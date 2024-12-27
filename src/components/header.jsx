@@ -9,7 +9,7 @@ export function Header() {
   const nav = useNavigate();
   const [search, setSearch] = useState("");
   return (
-    <header className="fixed flex items-center justify-between w-full h-16 p-3 px-6 bg-white border-b-2 border-primary-primary">
+    <header className="fixed z-20 flex items-center justify-between w-full h-16 p-3 px-6 bg-white border-b-2 border-primary-primary">
       <section className="flex items-center flex-1">
         <img
           onClick={() => nav("/main")}
