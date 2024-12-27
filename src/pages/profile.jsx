@@ -10,7 +10,7 @@ import { url } from "./config";
 export function Profile() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const navigation = useNavigate();
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     setAlertPopUp(alertPopUp);
