@@ -15,7 +15,7 @@ export function Badge() {
 
   useEffect(() => {
     axios
-      .get("/badge", {
+      .get(`${url}/badge`, {
         withCredentials: true,
       })
       .then((res) => {

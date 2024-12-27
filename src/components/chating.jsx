@@ -7,7 +7,7 @@ const chatings = {
 };
 
 // 상대 || 나의 채팅
-export function ChatingTo({ whose, text }) {
+export function ChatingTo({ whose, msg }) {
   return (
     <>
       <div
@@ -20,7 +20,7 @@ export function ChatingTo({ whose, text }) {
         <section className={`${chatings[whose]}`}>
           <p>
             {/*여기에 댓글 추가*/}
-            {text}
+            {msg}
           </p>
         </section>
       </div>
