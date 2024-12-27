@@ -1,1 +1,1 @@
-export const url = "http://api.gsmitemfind.com/api";
+export const url = "https://api.gsmitemfind.com/api";
