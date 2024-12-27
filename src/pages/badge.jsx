@@ -2,16 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
-import BadgeIcon from "../components/hidden";
 import axios from "axios";
 import { url } from "./config";
-import Likes from "../imgs/likes.png";
-import Lost from "../imgs/lost.png";
-import Find from "../imgs/find.png";
+import Likes from "../imgs/Badge1.svg";
+import Lost from "../imgs/Badge2.svg";
+import Find from "../imgs/Badge3.svg";
+import BadgeNone from "../imgs/BadgeNone.svg";
 
 export function Badge() {
   const { alertPopUp } = useContext(AlertContext);
-  const [badge, setBadge] = useState(true);
+  const [badge, setBadge] = useState([]);
 
   useEffect(() => {
     axios
@@ -25,7 +25,7 @@ export function Badge() {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -33,48 +33,18 @@ export function Badge() {
       {alertPopUp ? <AlertPopUp /> : null}
       <div className="flex justify-center flex-col w-[40%] m-20">
         <h1 className="text-[36px] font-semibold mb-4">뱃지</h1>
-        <div className="flex gap-20">
-          <div className="flex flex-col items-center gap-1">
-            {badge.badge1 ? (
-              <img alt="찾기왕" className="w-[140px] h-[150px]" src={Find} />
-            ) : (
-              <BadgeIcon />
-            )}
-            <span
-              className={`text-[20px] ${
-                !badge ? "mt-8" : "mt-8"
-              } font-semibold`}
-            >
-              탐색왕
-            </span>
+        <div className="flex flex-wrap justify-center w-full gap-20 ">
+          <div className="flex-1 overflow-hidden">
+            <img alt="탐색왕" src={badge[0].trueorfalse ? BadgeNone : Find} />
+            <span className="text-[20px] font-semibold ">탐색왕</span>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            {badge.badge2 ? (
-              <img className="w-[165px] h-[160px]" src={Lost} />
-            ) : (
-              <BadgeIcon />
-            )}
-            <span
-              className={`text-[20px] ${
-                badge ? "mt-[34px]" : "mt-8"
-              } font-semibold`}
-            >
-              깜빡이
-            </span>
+          <div className="flex-1 overflow-hidden">
+            <img alt="깜빡이" src={badge[1].trueorfalse ? BadgeNone : Lost} />
+            <span className="text-[20px] font-semibold ">깜빡이</span>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            {badge.badge3 ? (
-              <img className="w-[180px] h-[180px]" src={Likes} />
-            ) : (
-              <BadgeIcon />
-            )}
-            <span
-              className={`text-[20px] ${
-                badge.badge3 ? null : "mt-8"
-              } font-semibold`}
-            >
-              인기왕
-            </span>
+          <div className="flex-1 overflow-hidden">
+            <img alt="인기왕" src={badge[2].trueorfalse ? BadgeNone : Likes} />
+            <span className="text-[20px] font-semibold ">인기왕</span>
           </div>
         </div>
       </div>
