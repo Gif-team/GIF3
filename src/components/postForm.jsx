@@ -35,6 +35,13 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
 
+  console.log(title);
+  console.log(amount);
+  console.log(description);
+  console.log(selectedLostItem);
+  console.log(selectedGwan);
+  console.log(selectedFloor);
+
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
   const floors = ["1층", "2층", "3층", "4층", "5층"];
