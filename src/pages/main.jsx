@@ -36,6 +36,8 @@ export function Main({ search }) {
       });
   }, []);
 
+  console.log(posts);
+
   return (
     <div className="flex flex-col items-center w-full ">
       {filter ? <FilterPopup setFilter={setFilter} /> : null}
