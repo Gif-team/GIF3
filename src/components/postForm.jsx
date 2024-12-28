@@ -42,7 +42,7 @@ export default function PostForm({ postData = {}, postImgs = {}, postEditId }) {
 
   // 상태 초기화
   useEffect(() => {
-    if (postData && Object.keys(postData).length > 0) {
+    if (postData) {
       setTitle(postData.title || "");
       setAmount(String(postData.price) || "");
       setDescription(postData.content || "");
