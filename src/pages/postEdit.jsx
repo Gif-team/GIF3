@@ -47,30 +47,41 @@ export function PostEdit() {
     getImgs();
   }, [Param.id]);
 
-  console.log(post);
-
   const navigate = useNavigate();
 
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
   const floors = ["1층", "2층", "3층", "4층", "5층"];
 
-  const [title, setTitle] = useState(post.title || "");
-  const [amount, setAmount] = useState(post.price || "");
-  const [description, setDescription] = useState(post.content || "");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [selectedLostItem, setSelectedLostItem] = useState(post.category || "");
-  const [selectedGwan, setSelectedGwan] = useState(
-    gwans[post.building?.id - 1] || ""
-  );
-  const [selectedFloor, setSelectedFloor] = useState(
-    floors[post.building?.floor - 1] || ""
-  );
+  const [selectedLostItem, setSelectedLostItem] = useState("");
+  const [selectedGwan, setSelectedGwan] = useState("");
+  const [selectedFloor, setSelectedFloor] = useState("");
 
   const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
+
+  const isInitialRender = useRef(true);
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // 한 번만 실행
+      setTitle(post.title || "");
+      setAmount(post.price || "");
+      setDescription(post.content || "");
+      setSelectedLostItem(post.category ? lostItems[0] : lostItems[1] || "");
+      setSelectedGwan(gwans[post.building?.id - 1] || "");
+      setSelectedFloor(floors[post.building?.floor - 1] || "");
+      console.log("render");
+      // 초기 렌더가 끝났으면 isInitialRender를 false로 변경
+      isInitialRender.current = false;
+    }
+  }, [post]);
 
   // 알림 팝업
   useEffect(() => {
@@ -163,8 +174,8 @@ export function PostEdit() {
           <div className="flex w-full gap-[10px] overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
             <div
               className="flex items-center justify-center 
-              border border-gray-400 rounded-lg select-none
-              w-[150px] h-[150px] flex-shrink-0"
+                border border-gray-400 rounded-lg select-none
+                w-[150px] h-[150px] flex-shrink-0"
             >
               <input
                 type="file"
