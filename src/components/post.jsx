@@ -48,23 +48,25 @@ export function Post({ post, filter, search }) {
       setHidden(true);
     }
   }, [filter, search, post]);
+
   return (
-    <div
-      onClick={() => nav(`/post/${post.id}`)}
-      className={`${
-        hidden ? "hidden" : null
-      } w-[200px] m-3 h-[340px] rounded-lg border-gray-border border justify-between`}
-    >
-      <img className="w-full h-[200px]" src={blueLogo} alt="게시물 사진" />
-      <div className="gap-3 flex flex-col justify-center m-[12px]">
-        <h3 className="text-[21px] font-bold">{post.title}</h3>
-        <div className=" opacity-[0.5] text-[13px]">
-          {`${post.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
-            post.building.floor
-          }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
-        </div>
-        <span className="text-gray-fee">사례금:{post.price}원</span>
-      </div>
-    </div>
+    // <div
+    //   onClick={() => nav(`/post/${post.id}`)}
+    //   className={` w-[200px] m-3 h-[340px] rounded-lg border-gray-border border justify-between ${
+    //     hidden ? "hidden" : null
+    //   }`}
+    // >
+    //   <img className="w-full h-[200px]" src={blueLogo} alt="게시물 사진" />
+    //   <div className="gap-3 flex flex-col justify-center m-[12px]">
+    //     <h3 className="text-[21px] font-bold">{post.title}</h3>
+    //     <div className=" opacity-[0.5] text-[13px]">
+    //       {`${post.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
+    //         post.building.floor
+    //       }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
+    //     </div>
+    //     <span className="text-gray-fee">사례금:{post.price}원</span>
+    //   </div>
+    // </div>
+    <div>{post.title} 제목</div>
   );
 }
