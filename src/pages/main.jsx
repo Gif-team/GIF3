@@ -40,8 +40,8 @@ export function Main({ search }) {
       <div className="w-[60%] flex flex-col">
         <h1 className="m-5 mt-20 text-2xl font-bold">최신 게시물</h1>
         <div className="flex flex-wrap">
-          {posts.map((v) => (
-            <Post key={v.id} post={v.posts} filter={filter} search={search} />
+          {posts.map((post) => (
+            <Post key={post.id} post={post} filter={filter} search={search} />
           )) || <div>게시물이 없습니다.</div>}
         </div>
       </div>
