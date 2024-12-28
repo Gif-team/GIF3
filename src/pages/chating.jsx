@@ -47,32 +47,6 @@ export function Chating() {
     setTextValue(e.target.value.length);
   };
 
-  // 채팅방 목록 조회, 채팅 메시지 조회
-  useEffect(() => {
-    const getChatList = () => {
-      axios
-        .get(`${url}/chat/room/part`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          setChatList(res.data.result);
-        });
-    };
-
-    const getChatMsg = () => {
-      axios
-        .get(`${url}/chat/msg/${chatList.id}`, { withCredentials: true })
-        .then((res) => {
-          console.log(res.data);
-          setChatMsg(res.data.result);
-        })
-        .catch((err) => console.log(err));
-    };
-
-    getChatList();
-    getChatMsg();
-  }, []);
-
   // 채팅 메시지 보내기
   const msgPost = (event) => {
     if (event.key === "Enter") {
@@ -90,6 +64,31 @@ export function Chating() {
     }
   };
 
+  // 채팅방 목록 조회
+  useEffect(() => {
+    axios
+      .get(`${url}/chat/room/part`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setChatList(res.data.result);
+      });
+  }, []);
+
+  // 채팅 메시지 조회
+  useEffect(() => {
+    axios
+      .get(`${url}/chat/msg/${chatList.id}`, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+        setChatMsg(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }, [chatMsg]);
+
+  console.log(chatList);
+  console.log(chatMsg);
+
   return (
     <div className="flex flex-col items-center w-full h-[100vh]">
       <Header />
@@ -104,9 +103,6 @@ export function Chating() {
             {/* {chatList.map((v) => {
               return <ChatingList key={v.id} title={v.title} />;
             })} */}
-
-            {/* 선택되어 있는 방이라면 회색으로 */}
-            <ChatingList title={"title"} isSelected={true} />
           </main>
         </div>
 
