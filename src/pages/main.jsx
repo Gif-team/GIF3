@@ -18,6 +18,7 @@ export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [filter, setFilter] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true); // 추가: 로딩 상태
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -29,6 +30,9 @@ export function Main({ search }) {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false); // 추가: 로딩 완료 상태
       });
   }, []);
 
@@ -40,9 +44,15 @@ export function Main({ search }) {
       <div className="w-[60%] flex flex-col">
         <h1 className="m-5 mt-20 text-2xl font-bold">최신 게시물</h1>
         <div className="flex flex-wrap">
-          {posts.map((post) => (
-            <Post key={post.id} post={post} filter={filter} search={search} />
-          )) || <div>게시물이 없습니다.</div>}
+          {loading ? ( // 추가: 로딩 중 표시
+            <div>로딩 중...</div>
+          ) : Array.isArray(posts) && posts.length > 0 ? (
+            posts.map((post) => (
+              <Post key={post.id} post={post} filter={filter} search={search} />
+            ))
+          ) : (
+            <div>게시물이 없습니다.</div>
+          )}
         </div>
       </div>
       <div className="fixed flex flex-col gap-4 bottom-6 right-16">
