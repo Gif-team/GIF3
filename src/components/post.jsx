@@ -34,20 +34,20 @@ export function Post({ post, filter, search = {} }) {
 
   console.log(filter);
 
-  useEffect(() => {
-    if (!post.title.includes(search)) {
-      setHidden(true);
-    }
-    if (post.category !== null && post.category !== filter.category) {
-      setHidden(true);
-    }
-    if (post.building.id !== null && post.building.id !== filter.building_id) {
-      setHidden(true);
-    }
-    if (post.building.floor !== null && post.building.floor !== filter.floor) {
-      setHidden(true);
-    }
-  }, [filter, search, post]);
+  // useEffect(() => {
+  //   if (!post.title.includes(search)) {
+  //     setHidden(true);
+  //   }
+  //   if (post.category !== null && post.category !== filter.category) {
+  //     setHidden(true);
+  //   }
+  //   if (post.building.id !== null && post.building.id !== filter.building_id) {
+  //     setHidden(true);
+  //   }
+  //   if (post.building.floor !== null && post.building.floor !== filter.floor) {
+  //     setHidden(true);
+  //   }
+  // }, [filter, search, post]);
 
   useEffect(() => {
     const getImgs = () => {

@@ -101,30 +101,29 @@ export function Detail() {
     }
   };
 
-  // 이미지 요청
-  const getImage = () => {
-    axios
-      .get(`${url}/post/${Param.id}`, { withCredentials: true })
-      .then((res) => {
-        setImg(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 게시물 데이터 요청
   useEffect(() => {
-    axios
-      .get(`${url}/post/${Param.id}`, { withCredentials: true })
-      .then((res) => {
-        setData(res.data);
-        setLikeCount(res.data.LikeNumber);
-        getImage();
-      });
-  }, [Param.id, getImage]);
+    // 게시물 요청
+    const getPost = () => {
+      axios
+        .get(`${url}/post/${Param.id}`, { withCredentials: true })
+        .then((res) => {
+          setData(res.data);
+          setLikeCount(res.data.LikeNumber);
+        });
+    };
 
-  useEffect(() => {
+    // 이미지 요청
+    const getImgs = () => {
+      axios
+        .get(`${url}/post/${Param.id}`, { withCredentials: true })
+        .then((res) => {
+          setImg(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     // 로그인된 유저 확인
     const GetLoggedUserInfo = () => {
       axios
@@ -151,7 +150,9 @@ export function Detail() {
 
     GetLoggedUserInfo();
     GetChatRoom();
-  }, []);
+    getPost();
+    getImgs();
+  }, [Param.id]);
 
   // 채팅방 생성
   const CreateChatRoom = () => {
