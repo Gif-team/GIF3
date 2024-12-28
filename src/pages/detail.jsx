@@ -125,33 +125,33 @@ export function Detail() {
   }, [Param.id, getImage]);
 
   useEffect(() => {
+    // 로그인된 유저 확인
+    const GetLoggedUserInfo = () => {
+      axios
+        .get(`${url}/auth/user`, { withCredentials: true })
+        .then((res) => {
+          setUser(res.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    // 채팅방 확인
+    const GetChatRoom = () => {
+      axios
+        .get(`${url}/chat/room`, { withCredentials: true })
+        .then((res) => {
+          setChatRoom(res.data.result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     GetLoggedUserInfo();
     GetChatRoom();
   }, []);
-
-  // 로그인된 유저 확인
-  const GetLoggedUserInfo = () => {
-    axios
-      .get(`${url}/auth`, { withCredentials: true })
-      .then((res) => {
-        setUser(res.data.result.id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // 채팅방 확인
-  const GetChatRoom = () => {
-    axios
-      .get(`${url}/chat/room`, { withCredentials: true })
-      .then((res) => {
-        setChatRoom(res.data.result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   // 채팅방 생성
   const CreateChatRoom = () => {
@@ -192,7 +192,7 @@ export function Detail() {
   // 끌어올리기
   const PullPost = () => {
     axios
-      .post(`${url}/post/${data.postId}`, { withCredentials: true })
+      .post(`${url}/post/${data.Param.id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
       })
@@ -204,7 +204,7 @@ export function Detail() {
   // 게시물 삭제
   const DeletePost = () => {
     axios
-      .delete(`${url}/post/${data.postId}`, { withCredentials: true })
+      .delete(`${url}/post/${data.Param.id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         navigate("/main");
@@ -213,6 +213,8 @@ export function Detail() {
         console.log(err);
       });
   };
+
+  console.log(data);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -262,7 +264,7 @@ export function Detail() {
               </button>
               <button
                 className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
-                onClick={() => navigate(`/postEdit${data.postId}`)}
+                onClick={() => navigate(`/postEdit${data.Param.id}`)}
               >
                 수정하기
               </button>

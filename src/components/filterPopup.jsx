@@ -44,6 +44,7 @@ export function FilterPopup({ setFilter }) {
   //저장된 필터 정보 가져와서 필터 초기화
   useEffect(() => {
     const storedFilter = localStorage.getItem("filter");
+
     if (storedFilter) {
       const { category, building_Id, floor } = JSON.parse(storedFilter);
       setSelectedLostItem(lostItems[category - 1]);
