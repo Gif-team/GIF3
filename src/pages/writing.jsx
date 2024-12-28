@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
-
+import { useContext, useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
@@ -21,6 +21,8 @@ import TrashCan from "../imgs/trashcan.svg";
  */
 
 export function Writing() {
+  const navigate = useNavigate();
+
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -121,7 +123,7 @@ export function Writing() {
       <main className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
         <div className="flex flex-col w-full gap-14">
           {/* 이미지 */}
-          <div className="flex space-x-2 overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
+          <div className="flex w-full gap-[10px] overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
             <div
               className="flex items-center justify-center 
               border border-gray-400 rounded-lg select-none
@@ -142,14 +144,14 @@ export function Writing() {
               </label>
             </div>
             {imgFiles.map((imgFile, index) => (
-              <div key={index} className="relative z-10">
+              <div key={index} className="relative">
                 <ImageCard url={URL.createObjectURL(imgFile)} />
-                <img
-                  src={TrashCan}
-                  alt="trash"
+                <button
+                  className="absolute p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
                   onClick={() => deleteImage(index)}
-                  className="absolute cursor-pointer p-1 bg-[rgba(255,255,255,0.8)] rounded-full top-2 right-1"
-                />
+                >
+                  <img src={TrashCan} alt="trash" />
+                </button>
               </div>
             ))}
           </div>
@@ -162,13 +164,33 @@ export function Writing() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <input
-            type="text"
-            placeholder="사례금을 입력하세요(최대 100만원)"
-            className="text-2xl border-none outline-none"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+          <div className="relative flex items-center w-full text-2xl">
+            <input
+              type="text"
+              placeholder="사례금을 입력하세요(최대 100만원)"
+              className="relative w-full pr-8 border-none outline-none"
+              value={amount}
+              onChange={(e) => {
+                let value = e.target.value;
+
+                // 숫자가 아닌 값 제거
+                value = value.replace(/[^0-9]/g, "");
+
+                // 맨 앞의 0 제거
+                value = value.replace(/^0+/, "");
+
+                // 최대값 100만 원 제한
+                const maxAmount = 1000000;
+                if (parseInt(value) > maxAmount) {
+                  value = maxAmount.toString();
+                }
+
+                setAmount(value); // 상태 업데이트
+              }}
+            />
+            <span className="absolute text-gray-500 right-2">원</span>
+          </div>
+
           <textarea
             className="text-xl border-none outline-none resize-none"
             placeholder="설명을 입력하세요(최대 200글자)"
@@ -177,7 +199,6 @@ export function Writing() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
-
           {/* 드롭다운 */}
           <div className="flex items-center justify-center w-full">
             <SelectSmall
@@ -212,7 +233,10 @@ export function Writing() {
             isFormValid ? "bg-opacity-100" : "bg-opacity-50"
           }`}
           disabled={!isFormValid}
-          onClick={writePost}
+          onClick={() => {
+            writePost(); // 첫 번째 함수 실행
+            navigate("/main"); // 두 번째 함수 실행
+          }}
         >
           추가하기
         </button>

@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { AlertContext } from "../context/alertContext";
@@ -6,6 +7,7 @@ import { Header } from "../components/header";
 import { AlertPopUp } from "../components/alertPopUp";
 import { ImageCard } from "../components/imageCard";
 import SelectSmall from "../components/dropButton";
+import { url } from "./config";
 
 import Camera from "../imgs/camera.svg";
 import Floor from "../imgs/floor.svg";
@@ -14,6 +16,8 @@ import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostEdit({ postId }) {
+  const navigate = useNavigate();
+
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -82,44 +86,52 @@ export default function PostEdit({ postId }) {
   // 수정된 게시물 제출
   const updatePost = async () => {
     try {
-      const data = {
-        title,
-        price: Number(amount),
-        content: description,
-        category: Boolean(!lostItems.indexOf(selectedLostItem)),
-        building: {
-          id: gwans.indexOf(selectedGwan) + 1,
-          floor:
-            selectedGwan === "기숙사"
-              ? floors.indexOf(selectedFloor) + 1
-              : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
+      const postResponse = await axios.post(
+        `${url}/post/create`,
+        {
+          title,
+          price: Number(amount),
+          content: description,
+          category: Boolean(!lostItems.indexOf(selectedLostItem)),
+          building: {
+            id: gwans.indexOf(selectedGwan) + 1,
+            floor:
+              selectedGwan === "기숙사"
+                ? floors.indexOf(selectedFloor) + 1
+                : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
+          },
         },
-        images: [],
-      };
+        { withCredentials: true }
+      );
 
-      // 이미지 업로드
+      const postId = postResponse.data.result.id; // 서버로부터 받은 postId 저장
+
+      // 이미지 업로드 기능
       for (let file of imgFiles) {
-        const { data: presignedUrl } = await axios.post(
-          `/api/s3/presigned-url`,
+        // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
+        const presignedUrlResponse = await axios.post(
+          `${url}/s3/presigned-url`,
           {
             fileName: file.name,
             fileType: file.type,
-          }
+          },
+          { withCredentials: true }
         );
 
-        await axios.put(presignedUrl, file, {
-          headers: { "Content-Type": file.type },
-        });
+        const presignedUrl = presignedUrlResponse.data.url;
 
-        const {
-          data: { url },
-        } = await axios.get(`/api/image-url/${file.name}`);
-        data.images.push(url);
+        // 2. 받아온 url로 파일을 보냄
+        await axios.put(presignedUrl, file, { withCredentials: true });
+
+        // 3. 이미지 속성 db에 저장
+        await axios.post(
+          `${url}/image/save-image`,
+          { postId: postId, fileName: file.name },
+          { withCredentials: true }
+        );
       }
-
-      await axios.put(`/api/post/update/${postId}`, data);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -129,13 +141,9 @@ export default function PostEdit({ postId }) {
       {alertPopUp && <AlertPopUp />}
       <main className="flex flex-col w-[37.5rem] h-max p-[3.75rem] py-9 border-x-2 items-center mt-16">
         <div className="flex flex-col w-full gap-14">
-          {/*이미지*/}
+          {/* 이미지 */}
           <div className="flex w-full gap-[10px] overflow-x-auto whitespace-nowrap scroll-smooth no-scrollbar">
-            <div
-              className="flex items-center justify-center 
-              border border-gray-400 rounded-lg select-none
-              w-[150px] h-[150px] flex-shrink-0"
-            >
+            <div className="flex items-center justify-center border border-gray-400 rounded-lg select-none w-[150px] h-[150px] flex-shrink-0">
               <input
                 type="file"
                 id="imgUpload"
@@ -167,17 +175,37 @@ export default function PostEdit({ postId }) {
             type="text"
             placeholder="제목을 입력해주세요 (최대20글자)"
             maxLength="20"
-            className="text-[2rem] font-semibold border-none outline-none leading-10 w-full"
+            className="text-[2rem] font-semibold border-none leading-10 w-full outline-none"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <input
-            type="text"
-            placeholder="사례금을 입력하세요(최대 100만원)"
-            className="text-2xl border-none outline-none"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+          <div className="relative flex items-center w-full text-2xl">
+            <input
+              type="text"
+              placeholder="사례금을 입력하세요(최대 100만원)"
+              className="relative w-full pr-8 border-none outline-none"
+              value={amount}
+              onChange={(e) => {
+                let value = e.target.value;
+
+                // 숫자가 아닌 값 제거
+                value = value.replace(/[^0-9]/g, "");
+
+                // 맨 앞의 0 제거
+                value = value.replace(/^0+/, "");
+
+                // 최대값 100만 원 제한
+                const maxAmount = 1000000;
+                if (parseInt(value) > maxAmount) {
+                  value = maxAmount.toString();
+                }
+
+                setAmount(value); // 상태 업데이트
+              }}
+            />
+            <span className="absolute text-gray-500 right-2">원</span>
+          </div>
+
           <textarea
             className="text-xl border-none outline-none resize-none"
             placeholder="설명을 입력하세요(최대 200글자)"
@@ -186,7 +214,7 @@ export default function PostEdit({ postId }) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
-          {/*드롭다운*/}
+          {/* 드롭다운 */}
           <div className="flex items-center justify-center w-full">
             <SelectSmall
               svg={LostItem}
@@ -213,13 +241,17 @@ export default function PostEdit({ postId }) {
             />
           </div>
         </div>
+
         {/* 제출 */}
         <button
           className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
             isFormValid ? "bg-opacity-100" : "bg-opacity-50"
           }`}
           disabled={!isFormValid}
-          onClick={updatePost}
+          onClick={() => {
+            updatePost(); // 첫 번째 함수 실행
+            navigate("/main"); // 두 번째 함수 실행
+          }}
         >
           추가하기
         </button>
