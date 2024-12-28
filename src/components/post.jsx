@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import blueLogo from "../imgs/logo1.svg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function where(lo) {
   if (lo === 1) {
@@ -30,6 +30,7 @@ function getDate(value) {
 export function Post({ post, filter, search = {} }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
+  const [imgs, setImgs] = useState([]);
 
   console.log(filter);
 
@@ -48,15 +49,17 @@ export function Post({ post, filter, search = {} }) {
     }
   }, [filter, search, post]);
 
-  use;
-  const getImgs = () => {
-    axios
-      .get(`/api/image/${postId}`, { withCredentials: true })
-      .then((res) => {
-        setImgs(res.data);
-      })
-      .catch((error) => console.error(error));
-  };
+  useEffect(() => {
+    const getImgs = () => {
+      axios
+        .get(`/api/image/${post.id}`, { withCredentials: true })
+        .then((res) => {
+          setImgs(res.data);
+        })
+        .catch((error) => console.error(error));
+    };
+    getImgs();
+  }, [post]);
 
   return (
     <div
@@ -65,7 +68,9 @@ export function Post({ post, filter, search = {} }) {
         hidden ? "hidden" : null
       }`}
     >
-      <img className="w-full h-[200px]" src={blueLogo} alt="게시물 사진" />
+      {imgs.map((img) => (
+        <img src={img} alt="게시물 사진" />
+      ))}
       <div className="gap-3 flex flex-col justify-center m-[12px]">
         <h3 className="text-[21px] font-bold">{post.title}</h3>
         <div className=" opacity-[0.5] text-[13px]">
