@@ -286,7 +286,7 @@ export function Detail() {
               <p className="text-sm font-bold text-gray-400">
                 {`${
                   data.category ? "찾았습니다" : "잃어버렸습니다"
-                } ∙ ${getDate(data.realtime.split("T")[0])}`}
+                } ∙ ${getDate(data.realtime)}`}
                 {/* {`${data.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
                   data.building.floor
                 }층 ∙ ${where(data.building.id)} ∙ ${getDate(data.realtime)}`} */}
