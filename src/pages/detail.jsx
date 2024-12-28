@@ -76,17 +76,13 @@ export function Detail() {
       setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
       setLikeCount(likeBool ? likeCount + 1 : likeCount - 1);
 
-      likeBool
-        ? axios
-            .post(
-              `${url}/post/${Param.id}/like`,
-              { like: likeBool },
-              { withCredentials: true }
-            )
-            .catch((err) => console.log(err))
-        : axios
-            .delete(`${url}/post/${Param.id}/like`, { withCredentials: true })
-            .catch((err) => console.log(err));
+      axios
+        .post(
+          `${url}/post/${Param.id}/like`,
+          { like: likeBool },
+          { withCredentials: true }
+        )
+        .catch((err) => console.log(err));
     } else {
       setMount(true);
     }
@@ -268,7 +264,7 @@ export function Detail() {
               </button>
               <button
                 className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
-                onClick={() => navigate(`/postEdit${Param.id}`)}
+                onClick={() => navigate(`/postEdit/${Param.id}`)}
               >
                 수정하기
               </button>
@@ -288,7 +284,9 @@ export function Detail() {
             <section className="flex flex-col gap-3">
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <p className="text-sm font-bold text-gray-400">
-                {data.category || "category"} · {data.realtime || "realTime"}
+                {`${data.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
+                  data.building.floor
+                }층 ∙ ${where(data.building.id)} ∙ ${getDate(data.realtime)}`}
               </p>
               <p className="text-base font-bold">
                 사례금 : {data.price || "price"}원

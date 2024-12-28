@@ -2,8 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { AlertContext } from "../context/alertContext";
 import { AlertPopUp } from "../components/alertPopUp";
+
 import axios from "axios";
 import { url } from "./config";
+
 import Likes from "../imgs/Badge1.svg";
 import Lost from "../imgs/Badge2.svg";
 import Find from "../imgs/Badge3.svg";
@@ -31,19 +33,31 @@ export function Badge() {
     <div className="flex justify-center">
       <Header />
       {alertPopUp ? <AlertPopUp /> : null}
-      <div className="flex justify-center flex-col w-[40%] m-20">
+      <div className="flex flex-col justify-center w-1/2 m-20">
         <h1 className="text-[36px] font-semibold mb-4">뱃지</h1>
         <div className="flex flex-wrap justify-center w-full gap-20 ">
           <div className="flex-1 overflow-hidden">
-            <img alt="탐색왕" src={badge.badge3 ? Find : BadgeNone} />
+            <img
+              alt="탐색왕"
+              src={badge.badge3 ? Find : BadgeNone}
+              className="w-full"
+            />
             <p className="text-[20px] font-semibold text-center">인기왕</p>
           </div>
           <div className="flex-1 overflow-hidden">
-            <img alt="깜빡이" src={badge.badge2 ? Lost : BadgeNone} />
+            <img
+              alt="깜빡이"
+              src={badge.badge2 ? Lost : BadgeNone}
+              className="w-full"
+            />
             <p className="text-[20px] font-semibold text-center">깜빡이</p>
           </div>
           <div className="flex-1 overflow-hidden">
-            <img alt="인기왕" src={badge.badge1 ? Likes : BadgeNone} />
+            <img
+              alt="인기왕"
+              src={badge.badge1 ? Likes : BadgeNone}
+              className="w-full"
+            />
             <p className="text-[20px] font-semibold text-center">탐색왕</p>
           </div>
         </div>
