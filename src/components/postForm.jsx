@@ -18,29 +18,29 @@ import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostForm({ postData = {}, postImgs = {} }) {
   const navigate = useNavigate();
-  const [title, setTitle] = useState(postData?.title || "");
-  const [amount, setAmount] = useState(postData?.price || "");
-  const [description, setDescription] = useState(postData?.content || "");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [selectedLostItem, setSelectedLostItem] = useState(
-    postData?.category || ""
-  );
-  const [selectedGwan, setSelectedGwan] = useState(
-    postData?.building?.id || ""
-  );
-  const [selectedFloor, setSelectedFloor] = useState(
-    postData?.building?.floor || ""
-  );
+  const [selectedLostItem, setSelectedLostItem] = useState("");
+  const [selectedGwan, setSelectedGwan] = useState("");
+  const [selectedFloor, setSelectedFloor] = useState("");
+
+  useEffect(() => {
+    // 상태 초기화
+    if (postData) {
+      setTitle(postData.title || "");
+      setAmount(postData.price || "");
+      setDescription(postData.content || "");
+      setSelectedLostItem(postData.category || "");
+      setSelectedGwan(postData.building?.id || "");
+      setSelectedFloor(postData.building?.floor || "");
+      console.log(title);
+    }
+  }, [postData]);
 
   const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
-
-  console.log(title);
-  console.log(amount);
-  console.log(description);
-  console.log(selectedLostItem);
-  console.log(selectedGwan);
-  console.log(selectedFloor);
 
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
