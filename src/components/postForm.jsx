@@ -17,17 +17,18 @@ import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostForm({ postData = {}, postImgs = {} }) {
-  console.log(postData);
-  console.log(postImgs);
-
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(postData.title || "");
+  const [amount, setAmount] = useState(postData.price || "");
+  const [description, setDescription] = useState(postData.content || "");
 
-  const [selectedLostItem, setSelectedLostItem] = useState("");
-  const [selectedGwan, setSelectedGwan] = useState("");
-  const [selectedFloor, setSelectedFloor] = useState("");
+  const [selectedLostItem, setSelectedLostItem] = useState(
+    postData.category || ""
+  );
+  const [selectedGwan, setSelectedGwan] = useState(postData.building.id || "");
+  const [selectedFloor, setSelectedFloor] = useState(
+    postData.building.floor || ""
+  );
 
   const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
