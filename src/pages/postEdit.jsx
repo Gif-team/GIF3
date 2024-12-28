@@ -1,5 +1,5 @@
 import PostForm from "../components/postForm";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useParams } from "react";
 import axios from "axios";
 
 export function PostEdit() {
