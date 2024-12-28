@@ -17,21 +17,18 @@ import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostForm({ postData = {} }) {
+  console.log(postData);
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState(postData?.title || "");
-  const [amount, setAmount] = useState(postData?.price || "");
-  const [description, setDescription] = useState(postData?.content || "");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [selectedLostItem, setSelectedLostItem] = useState(
-    postData?.category || ""
-  );
-  const [selectedGwan, setSelectedGwan] = useState(postData?.building.id || "");
-  const [selectedFloor, setSelectedFloor] = useState(
-    postData?.building.floor || ""
-  );
+  const [selectedLostItem, setSelectedLostItem] = useState("");
+  const [selectedGwan, setSelectedGwan] = useState("");
+  const [selectedFloor, setSelectedFloor] = useState("");
 
-  const [imgFiles, setImgFiles] = useState(postData?.imgs || []);
+  const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
 
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
