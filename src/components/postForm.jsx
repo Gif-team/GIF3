@@ -39,7 +39,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   useEffect(() => {
     if (postData) {
       setTitle(postData.title || "");
-      setAmount(postData.price || "");
+      setAmount(String(postData.price) || "");
       setDescription(postData.content || "");
       setSelectedLostItem(
         postData.category ? lostItems[0] : lostItems[1] || ""
@@ -125,11 +125,8 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
     title.trim() !== "" &&
     amount.trim() !== "" &&
     description.trim() !== "" &&
-    selectedLostItem &&
     selectedLostItem.trim() !== "" &&
-    selectedGwan &&
     selectedGwan.trim() !== "" &&
-    selectedFloor &&
     selectedFloor.trim() !== "" &&
     imgFiles.length > 0;
 
