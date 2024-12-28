@@ -54,8 +54,8 @@ export function Main({ search }) {
                 console.log(post),
                 (
                   <Post
-                    key={post[0]}
-                    post={post[1]}
+                    key={post.id}
+                    post={post}
                     filter={filter}
                     search={search}
                   />
