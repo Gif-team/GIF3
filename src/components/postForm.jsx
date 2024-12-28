@@ -16,10 +16,11 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
-export default function PostForm({ postData = {} }) {
+export default function PostForm({ postData = {}, postImgs = {} }) {
   console.log(postData);
-  const navigate = useNavigate();
+  console.log(postImgs);
 
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");

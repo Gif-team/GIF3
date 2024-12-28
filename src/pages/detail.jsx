@@ -248,7 +248,7 @@ export function Detail() {
           <img src={Profile} className="w-9 h-9" />
           <div className="py-8 text-xl font-bold">{data.writer}</div>
           {/* 조회인이 나인지 타인인지  */}
-          {user != data.writer ? (
+          {user.username != data.writer ? (
             <button
               className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
               onClick={HandleChatRoom}
