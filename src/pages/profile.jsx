@@ -25,7 +25,6 @@ export function Profile() {
     axios
       .get(`${url}/auth/user`, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
         setUserInfo(res.data.result);
       })
       .catch((err) => {

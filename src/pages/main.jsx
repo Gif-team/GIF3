@@ -16,10 +16,10 @@ import ChatBtn from "../imgs/chatBtn.svg";
 
 export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [search, setSearch] = useState(search);
-  const [filter, setFilter] = useState(filter);
+  const [filter, setFilter] = useState(false);
+  const [filterInfo, setFilterInfo] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true); // 추가: 로딩 상태
+  const [loading, setLoading] = useState(true);
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -33,8 +33,15 @@ export function Main({ search }) {
         console.log(err);
       })
       .finally(() => {
-        setLoading(false); // 추가: 로딩 완료 상태
+        setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const storedFilter = localStorage.getItem("filter");
+    if (storedFilter) {
+      setFilterInfo(JSON.parse(storedFilter));
+    }
   }, []);
 
   return (
@@ -45,11 +52,16 @@ export function Main({ search }) {
       <div className="w-[60%] flex flex-col">
         <h1 className="m-5 mt-20 text-2xl font-bold">최신 게시물</h1>
         <div className="flex flex-wrap">
-          {loading ? ( // 추가: 로딩 중 표시
+          {loading ? (
             <div>로딩 중...</div>
           ) : posts.length > 0 ? (
             posts.map((post) => (
-              <Post key={post.id} post={post} filter={filter} search={search} />
+              <Post
+                key={post.id}
+                post={post}
+                filter={filterInfo}
+                search={search}
+              />
             ))
           ) : (
             <div>게시물이 없습니다.</div>

@@ -27,28 +27,36 @@ function getDate(value) {
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
 
-export function Post({ post, filter, search }) {
+export function Post({ post, filter, search = {} }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
 
   console.log(filter);
-  console.log(search);
-  console.log(post);
 
-  // useEffect(() => {
-  //   if (!post.title.includes(search)) {
-  //     setHidden(true);
-  //   }
-  //   if (post.category !== null && post.category !== filter) {
-  //     setHidden(true);
-  //   }
-  //   if (post.building.id !== null && post.building.id !== filter) {
-  //     setHidden(true);
-  //   }
-  //   if (post.building.floor !== null && post.building.floor !== filter) {
-  //     setHidden(true);
-  //   }
-  // }, [filter, search, post]);
+  useEffect(() => {
+    if (!post.title.includes(search)) {
+      setHidden(true);
+    }
+    if (post.category !== null && post.category !== filter.category) {
+      setHidden(true);
+    }
+    if (post.building.id !== null && post.building.id !== filter.building_id) {
+      setHidden(true);
+    }
+    if (post.building.floor !== null && post.building.floor !== filter.floor) {
+      setHidden(true);
+    }
+  }, [filter, search, post]);
+
+  use;
+  const getImgs = () => {
+    axios
+      .get(`/api/image/${postId}`, { withCredentials: true })
+      .then((res) => {
+        setImgs(res.data);
+      })
+      .catch((error) => console.error(error));
+  };
 
   return (
     <div

@@ -2,7 +2,8 @@ import PostForm from "../components/postForm";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function PostEdit({ postId }) {
+export function PostEdit() {
+  const Param = useParams();
   const [postData, setPostData] = useState({});
   const [imgs, setImgs] = useState([]);
   const [post, setPost] = useState({});
@@ -11,7 +12,7 @@ export function PostEdit({ postId }) {
   useEffect(() => {
     const getPost = () => {
       axios
-        .get(`/api/post/${postId}`, { withCredentials: true })
+        .get(`/api/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setPost({
             title: res.data.title,
@@ -28,7 +29,7 @@ export function PostEdit({ postId }) {
 
     const getImgs = () => {
       axios
-        .get(`/api/image/${postId}`, { withCredentials: true })
+        .get(`/api/image/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setImgs(res.data);
         })
@@ -38,7 +39,7 @@ export function PostEdit({ postId }) {
     getPost();
     getImgs();
     setPostData(post, imgs);
-  }, [postId]);
+  }, [Param.id]);
 
   console.log(postData);
 
