@@ -14,15 +14,7 @@ export function PostEdit() {
       axios
         .get(`/api/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
-          setPost({
-            title: res.data.title,
-            content: res.data.content,
-            LikeNumber: res.data.LikeNumber,
-            price: res.data.price,
-            realtime: res.data.realtime,
-            category: res.data.category,
-            building: res.data.building,
-          });
+          setPost(res.data);
         })
         .catch((error) => console.error(error));
     };
