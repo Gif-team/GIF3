@@ -35,5 +35,5 @@ export function PostEdit() {
     getImgs();
   }, [Param.id]);
 
-  return <PostForm postData={post} postImgs={imgs} />;
+  return <PostForm postData={post} postImgs={imgs} postEditId={Param.id} />;
 }

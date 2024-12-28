@@ -192,7 +192,6 @@ export function Detail() {
       .delete(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        navigate("/main");
       })
       .catch((err) => {
         console.log(err);
