@@ -1,16 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import { Header } from "../components/header";
-import { AlertContext } from "../context/alertContext";
-import { AlertPopUp } from "../components/alertPopUp";
-import ProfileImg from "../imgs/profile.svg";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+import { AlertContext } from "../context/alertContext";
 import { url } from "./config";
+import axios from "axios";
+
+import { Header } from "../components/header";
+import { AlertPopUp } from "../components/alertPopUp";
+import Post from "../components/post";
+
+import ProfileImg from "../imgs/profile.svg";
 
 export function Profile() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const navigation = useNavigate();
-  const [userInfo, setUserInfo] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     setAlertPopUp(alertPopUp);
@@ -26,6 +31,13 @@ export function Profile() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  // post 정보 받아오기
+  useEffect(() => {
+    // axios.get(`${url}/post/my`, { withCredentials: true }).then((res) => {
+    //   console.log(res.data);
+    // });
   }, []);
 
   const MemberShipCancel = () => {
@@ -57,15 +69,21 @@ export function Profile() {
       <Header />
       {alertPopUp && <AlertPopUp />}
       <main className="mt-[60px] w-[674px]">
-        <div className="flex items-center pt-[10px]">
-          {/* profile svg */}
+        <div className="flex items-center pt-8">
+          {/* profile 이미지 */}
           <img src={ProfileImg} alt="profile" width={128} height={128} />
-          <h1 className="ml-6 text-3xl font-bold">
-            {userInfo.username || "cannnot find"}
-          </h1>
-          <ul className="flex flex-col items-center justify-center  bg-[#EFF0F2] ml-auto rounded-xl p-[24px] text-center">
-            <li className="font-bold">프로필</li>
-            <div className="bg-[#4f5665] w-full h-[1px] my-3"></div>
+          <div className="ml-6 ">
+            <h1 className="text-3xl font-bold">
+              {userInfo.username || "Loading name..."}
+            </h1>
+            <p className="text-sm font-bold text-gray-500">
+              {userInfo.email || "Loading email..."}
+            </p>
+          </div>
+          {/* 프로필 네비 */}
+          <ul className="flex flex-col items-center justify-center border border-gray-[#EFF0F2] ml-auto rounded-xl p-6 text-center">
+            <li className="text-base font-bold">프로필</li>
+            <div className="bg-[#EFF0F2] w-full h-[1px] my-3"></div>
             <div className="flex flex-col w-full gap-4 itms-center">
               <li
                 className="cursor-pointer "
@@ -76,22 +94,19 @@ export function Profile() {
               <li className="cursor-pointer" onClick={Logout}>
                 로그아웃
               </li>
-              <li
-                className="text-red-500 cursor-pointer"
-                onClick={MemberShipCancel}
-              >
+              <li className="cursor-pointer" onClick={MemberShipCancel}>
                 회원탈퇴
               </li>
             </div>
           </ul>
         </div>
         <div>
-          <h3 className=" text-[24px] font-medium mb-3">내가 작성한 글</h3>
+          <h3 className=" text-[24px] font-medium my-3">내가 작성한 글</h3>
           <div className="flex flex-wrap ">
-            {/* map 사용 예정 */}
-            {/* <Post />
-            <Post />
-            <Post /> */}
+            {/* 내가 작성한 글 */}
+            {/* {posts.map((post) => {
+              <Post key={post.id} />;
+            })} */}
           </div>
         </div>
       </main>

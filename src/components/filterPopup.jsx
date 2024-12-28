@@ -1,11 +1,9 @@
-//use client
 import React, { useEffect, useState } from "react";
 import SelectSmall from "../components/dropButton";
 import Floor from "../imgs/floor.svg";
 import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 
-/** 드롭다운 필터 */
 export function FilterPopup({ setFilter }) {
   // filter 뒷 배경 움직임 막기
   useEffect(() => {
@@ -55,7 +53,7 @@ export function FilterPopup({ setFilter }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 bg-[rgba(1,1,1,0.3)] w-full h-full z-10">
+    <div className="fixed top-0 left-0 bg-[rgba(1,1,1,0.3)] w-full h-full z-30">
       <div className="relative z-20 top-[50%] left-[50%] bg-gray-700 w-[50%] h-[50%] transform -translate-x-1/2 -translate-y-1/2 rounded-3xl p-4 max-w-2xl">
         <header className="flex items-start justify-between h-1/4">
           <div className="flex-1"></div>
@@ -108,9 +106,9 @@ export function FilterPopup({ setFilter }) {
             selected={selectedFloor}
           />
         </main>
-        <footer className="flex items-end justify-end h-1/4">
+        <footer className="flex items-end justify-center h-1/4">
           <button
-            className="p-2 text-white bg-primary-primary rounded-3xl"
+            className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
             onClick={handleApply}
           >
             적용하기
