@@ -18,16 +18,18 @@ import TrashCan from "../imgs/trashcan.svg";
 
 export default function PostForm({ postData = {}, postImgs = {} }) {
   const navigate = useNavigate();
-  const [title, setTitle] = useState(postData.title || "");
-  const [amount, setAmount] = useState(postData.price || "");
-  const [description, setDescription] = useState(postData.content || "");
+  const [title, setTitle] = useState(postData?.title || "");
+  const [amount, setAmount] = useState(postData?.price || "");
+  const [description, setDescription] = useState(postData?.content || "");
 
   const [selectedLostItem, setSelectedLostItem] = useState(
-    postData.category || ""
+    postData?.category || ""
   );
-  const [selectedGwan, setSelectedGwan] = useState(postData.building.id || "");
+  const [selectedGwan, setSelectedGwan] = useState(
+    postData?.building?.id || ""
+  );
   const [selectedFloor, setSelectedFloor] = useState(
-    postData.building.floor || ""
+    postData?.building?.floor || ""
   );
 
   const [imgFiles, setImgFiles] = useState([]);
