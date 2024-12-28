@@ -17,21 +17,58 @@ import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
 export function PostEdit() {
+  const Param = useParams();
+  const [imgs, setImgs] = useState([]);
+  const [post, setPost] = useState({});
+
+  // // 게시물 데이터를 서버에서 가져옴
+  useEffect(() => {
+    const getPost = () => {
+      axios
+        .get(`${url}/post/${Param.id}`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+          setPost(res.data);
+        })
+        .catch((error) => console.error(error));
+    };
+
+    const getImgs = () => {
+      axios
+        .get(`${url}/image/${Param.id}`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+          setImgs(res.data);
+        })
+        .catch((error) => console.error(error));
+    };
+
+    getPost();
+    getImgs();
+  }, [Param.id]);
+
+  console.log(post);
+
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-
-  const [selectedLostItem, setSelectedLostItem] = useState("");
-  const [selectedGwan, setSelectedGwan] = useState("");
-  const [selectedFloor, setSelectedFloor] = useState("");
-
-  const [imgFiles, setImgFiles] = useState([]);
-  const imgRef = useRef();
 
   const lostItems = ["찾았습니다", "잃어버렸습니다"];
   const gwans = ["본관", "금봉관", "기숙사"];
   const floors = ["1층", "2층", "3층", "4층", "5층"];
+
+  const [title, setTitle] = useState(post.title || "");
+  const [amount, setAmount] = useState(post.price || "");
+  const [description, setDescription] = useState(post.content || "");
+
+  const [selectedLostItem, setSelectedLostItem] = useState(post.category || "");
+  const [selectedGwan, setSelectedGwan] = useState(
+    gwans[post.building?.id - 1] || ""
+  );
+  const [selectedFloor, setSelectedFloor] = useState(
+    floors[post.building?.floor - 1] || ""
+  );
+
+  const [imgFiles, setImgFiles] = useState([]);
+  const imgRef = useRef();
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
@@ -116,36 +153,6 @@ export function PostEdit() {
     selectedFloor.trim() !== "" &&
     imgFiles.length > 0;
 
-  const Param = useParams();
-  const [imgs, setImgs] = useState([]);
-  const [post, setPost] = useState({});
-
-  // // 게시물 데이터를 서버에서 가져옴
-  useEffect(() => {
-    const getPost = () => {
-      axios
-        .get(`${url}/post/${Param.id}`, { withCredentials: true })
-        .then((res) => {
-          console.log(res.data);
-          setPost(res.data);
-        })
-        .catch((error) => console.error(error));
-    };
-
-    const getImgs = () => {
-      axios
-        .get(`${url}/image/${Param.id}`, { withCredentials: true })
-        .then((res) => {
-          console.log(res.data);
-          setImgs(res.data);
-        })
-        .catch((error) => console.error(error));
-    };
-
-    getPost();
-    getImgs();
-  }, [Param.id]);
-
   return (
     <div className="flex flex-col items-center w-full h-max">
       <Header />
@@ -192,7 +199,6 @@ export function PostEdit() {
             maxLength="20"
             className="text-[2rem] font-semibold border-none leading-10 outline-none"
             value={title}
-            defaultValue={"하"}
             onChange={(e) => setTitle(e.target.value)}
           />
           <div className="relative flex items-center w-full text-2xl">
