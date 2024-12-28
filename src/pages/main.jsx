@@ -16,7 +16,8 @@ import ChatBtn from "../imgs/chatBtn.svg";
 
 export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [filter, setFilter] = useState(false);
+  const [search, setSearch] = useState(search);
+  const [filter, setFilter] = useState(filter);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); // 추가: 로딩 상태
   const navigator = useNavigate();
@@ -36,8 +37,6 @@ export function Main({ search }) {
       });
   }, []);
 
-  console.log(typeof posts);
-
   return (
     <div className="flex flex-col items-center w-full ">
       {filter ? <FilterPopup setFilter={setFilter} /> : null}
@@ -49,19 +48,9 @@ export function Main({ search }) {
           {loading ? ( // 추가: 로딩 중 표시
             <div>로딩 중...</div>
           ) : posts.length > 0 ? (
-            posts.map(
-              (post) => (
-                console.log(post),
-                (
-                  <Post
-                    key={post.id}
-                    post={post}
-                    filter={filter}
-                    search={search}
-                  />
-                )
-              )
-            )
+            posts.map((post) => (
+              <Post key={post.id} post={post} filter={filter} search={search} />
+            ))
           ) : (
             <div>게시물이 없습니다.</div>
           )}

@@ -5,6 +5,8 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 
 export function FilterPopup({ setFilter }) {
+  console.log("setFilter", setFilter);
+
   // filter 뒷 배경 움직임 막기
   useEffect(() => {
     const html = document.documentElement;
@@ -51,6 +53,8 @@ export function FilterPopup({ setFilter }) {
     localStorage.setItem("filter", JSON.stringify(filterInfo));
     setFilter(false);
   };
+
+  console.log(storedFilter);
 
   return (
     <div className="fixed top-0 left-0 bg-[rgba(1,1,1,0.3)] w-full h-full z-30">
