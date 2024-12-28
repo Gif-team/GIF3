@@ -122,9 +122,9 @@ export function Chating() {
           </header>
           <main className="flex flex-col flex-1 max-h-full overflow-y-scroll no-scrollbar">
             {/* 채팅방 메시지 조회 MAP함수 사용예정 */}
-            {chatMsg.map((v) => {
+            {/* {chatMsg.map((v) => {
               <ChatingTo key={v.id} msg={v.msg} />;
-            })}
+            })} */}
           </main>
           <form className="flex justify-center items-center border-t border-[#C4C4C4] px-3 py-5">
             <div className="flex justify-around items-start bg-[#F0F0F0] px-5 py-3 flex-grow rounded-3xl h-full">

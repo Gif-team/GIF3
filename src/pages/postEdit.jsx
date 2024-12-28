@@ -5,7 +5,6 @@ import axios from "axios";
 
 export function PostEdit() {
   const Param = useParams();
-  const [postData, setPostData] = useState({});
   const [imgs, setImgs] = useState([]);
   const [post, setPost] = useState({});
 
@@ -39,10 +38,10 @@ export function PostEdit() {
 
     getPost();
     getImgs();
-    setPostData(post, imgs);
   }, [Param.id]);
 
-  console.log(postData);
+  console.log(post);
+  console.log(imgs);
 
-  return <PostForm postData={postData} />;
+  return <PostForm postData={post} postImgs={imgs} />;
 }
