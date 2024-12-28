@@ -37,6 +37,7 @@ export function Main({ search }) {
   }, []);
 
   console.log(posts);
+  console.log(posts.length);
 
   return (
     <div className="flex flex-col items-center w-full ">
