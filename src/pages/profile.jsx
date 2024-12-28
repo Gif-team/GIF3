@@ -1,19 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { Header } from "../components/header";
+import { useNavigate } from "react-router-dom";
+
 import { AlertContext } from "../context/alertContext";
+import { url } from "./config";
+import axios from "axios";
+
+import { Header } from "../components/header";
 import { AlertPopUp } from "../components/alertPopUp";
 import Post from "../components/post";
-import ProfileImg from "../imgs/profile.svg";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { url } from "./config";
 
-//CHECKLIST
-/**
- *[ ] post 받아오는 기능 구현
- *[ ]
- *[ ]
- */
+import ProfileImg from "../imgs/profile.svg";
 
 export function Profile() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);

@@ -11,7 +11,7 @@ import { Starting } from "./pages/starting";
 import { Detail } from "./pages/detail";
 import { AlertProvider } from "./context/alertContext";
 import { ChangePassword } from "./pages/changePassword";
-import PostEdit from "./pages/postEdit";
+import { PostEdit } from "./pages/postEdit";
 
 function App() {
   return (
