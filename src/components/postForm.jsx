@@ -30,12 +30,18 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
     // 상태 초기화
     if (postData) {
       setTitle(postData.title || "");
-      setAmount(postData.price || "");
+      setAmount(Number(postData.price) || "");
       setDescription(postData.content || "");
-      setSelectedLostItem(postData.category || "");
+      setSelectedLostItem(
+        Boolean(!postData.category.indexOf(selectedLostItem)) || ""
+      );
       setSelectedGwan(postData.building?.id || "");
-      setSelectedFloor(postData.building?.floor || "");
-      console.log(title);
+      setSelectedFloor(
+        postData.building?.floor === "기숙사"
+          ? postData.building?.floor.indexOf(selectedFloor) + 1
+          : postData.building?.floor.indexOf(selectedFloor.slice(0, 4)) + 1 ||
+              ""
+      );
     }
   }, [postData]);
 
@@ -120,14 +126,14 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   };
 
   // 유효성 검사
-  // const isFormValid =
-  //   title.trim() !== "" &&
-  //   amount.trim() !== "" &&
-  //   description.trim() !== "" &&
-  //   selectedLostItem.trim() !== "" &&
-  //   selectedGwan.trim() !== "" &&
-  //   selectedFloor.trim() !== "" &&
-  //   imgFiles.length > 0;
+  const isFormValid =
+    title.trim() !== "" &&
+    amount.trim() !== "" &&
+    description.trim() !== "" &&
+    selectedLostItem.trim() !== "" &&
+    selectedGwan.trim() !== "" &&
+    selectedFloor.trim() !== "" &&
+    imgFiles.length > 0;
 
   return (
     <div className="flex flex-col items-center w-full h-max">
@@ -242,10 +248,10 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
 
         {/* 제출 */}
         <button
-          // className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
-          //   isFormValid ? "bg-opacity-100" : "bg-opacity-50"
-          // }`}
-          // disabled={!isFormValid}
+          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
+            isFormValid ? "bg-opacity-100" : "bg-opacity-50"
+          }`}
+          disabled={!isFormValid}
           onClick={() => {
             sendPost(); // 첫 번째 함수 실행
             navigate("/main"); // 두 번째 함수 실행

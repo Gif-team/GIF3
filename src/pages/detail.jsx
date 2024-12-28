@@ -13,9 +13,9 @@ import LeftArrow from "../imgs/leftArrow.svg";
 import RightArrow from "../imgs/rightArrow.svg";
 
 function where(lo) {
-  if (lo === 1) return "기숙사";
-  else if (lo === 2) return "본관";
-  else return "금봉관";
+  if (lo === 1) return "본관";
+  else if (lo === 2) return "금봉관";
+  else return "기숙사";
 }
 
 function getDate(value) {
@@ -273,8 +273,8 @@ export function Detail() {
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <p className="text-sm font-bold text-gray-400">
                 {`${data.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
-                  data?.building?.floor
-                }층 ∙ ${where(data?.building?.id)} ∙ ${getDate(data.realtime)}`}
+                  data.building?.floor
+                }층 ∙ ${where(data.building?.id)} ∙ ${getDate(data.realtime)}`}
               </p>
               <p className="text-base font-bold">
                 사례금 : {data.price || "price"}원
