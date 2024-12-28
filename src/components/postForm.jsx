@@ -242,10 +242,10 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
 
         {/* 제출 */}
         <button
-          className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
-            isFormValid ? "bg-opacity-100" : "bg-opacity-50"
-          }`}
-          disabled={!isFormValid}
+          // className={`px-4 py-3 bg-primary-primary rounded-3xl text-[white] mt-32 ${
+          //   isFormValid ? "bg-opacity-100" : "bg-opacity-50"
+          // }`}
+          // disabled={!isFormValid}
           onClick={() => {
             sendPost(); // 첫 번째 함수 실행
             navigate("/main"); // 두 번째 함수 실행
