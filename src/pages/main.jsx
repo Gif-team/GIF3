@@ -26,7 +26,7 @@ export function Main({ search }) {
       .get(`${url}/post`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        setPosts(res.data);
+        setPosts(Object.entries(res.data));
       })
       .catch((err) => {
         console.log(err);
@@ -35,6 +35,8 @@ export function Main({ search }) {
         setLoading(false); // 추가: 로딩 완료 상태
       });
   }, []);
+
+  console.log(posts);
 
   return (
     <div className="flex flex-col items-center w-full ">
@@ -46,9 +48,14 @@ export function Main({ search }) {
         <div className="flex flex-wrap">
           {loading ? ( // 추가: 로딩 중 표시
             <div>로딩 중...</div>
-          ) : Object.entries(posts).length > 0 ? (
-            Object.entries(posts).map((post) => (
-              <Post key={post.id} post={post} filter={filter} search={search} />
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+              <Post
+                key={post[0]}
+                post={post[1]}
+                filter={filter}
+                search={search}
+              />
             ))
           ) : (
             <div>게시물이 없습니다.</div>
