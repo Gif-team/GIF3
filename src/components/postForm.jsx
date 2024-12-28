@@ -44,8 +44,8 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
       setSelectedLostItem(
         postData.category ? lostItems[0] : lostItems[1] || ""
       );
-      setSelectedGwan(gwans[postData.building?.id] || "");
-      setSelectedFloor(floors[postData.building?.floor] || "");
+      setSelectedGwan(gwans[postData.building?.id - 1] || "");
+      setSelectedFloor(floors[postData.building?.floor - 1] || "");
     }
   }, [postData]);
 
