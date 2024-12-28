@@ -14,12 +14,10 @@ import { url } from "./config";
 
 //CHECKLIST
 /**
- * [ ]채팅 메시지 보내기, 조회
- * [ ]채팅방 조회 (자신이 속한)
- * [ ]채팅방 목록 조회
+ * [x]채팅 메시지 보내기, 조회
+ * [x]채팅방 조회
  * [ ]채팅방 삭제 & 나가기
  * [ ]채팅방 생성 & 가입
- * [ ]
  */
 
 export function Chating() {
@@ -27,15 +25,11 @@ export function Chating() {
 
   const [chatList, setChatList] = useState([]);
   const [chatMsg, setChatMsg] = useState([]);
-
-  // 자동 줄바꿈
+  const [textValue, setTextValue] = useState(0);
   const textarea = useRef();
   const textMaxLen = 300;
-  const handleTextArea = (e) => {
-    handleResizeHeight();
-    handleInputCounter(e);
-  };
 
+  // 텍스트 영역 높이 자동 조절
   const handleResizeHeight = () => {
     textarea.current.style.height = "auto"; // 높이 초기화
     const scrollHeight = textarea.current.scrollHeight; // 현재 스크롤 높이 가져오기
@@ -48,12 +42,12 @@ export function Chating() {
     }
   };
 
-  const [textValue, setTextValue] = useState(0);
+  // 입력 글자 수 카운트
   const handleInputCounter = (e) => {
     setTextValue(e.target.value.length);
   };
 
-  // 자신이 속한 채팅방 목록 조회 (왼쪽 채팅방 목록)
+  // 채팅방 목록 조회, 채팅 메시지 조회
   useEffect(() => {
     const getChatList = () => {
       axios
@@ -64,21 +58,23 @@ export function Chating() {
           setChatList(res.data.result);
         });
     };
+
+    const getChatMsg = () => {
+      axios
+        .get(`${url}/chat/msg/${chatList.id}`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+          setChatMsg(res.data.result);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    getChatList();
+    getChatMsg();
   }, []);
 
-  // 채팅 메시지 조회 (오른쪽 채팅방 자신, 상대방 채팅)
-  useEffect(() => {
-    axios
-      .get(`${url}/chat/msg/${chatList.id}`, { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-        setChatMsg(res.data.result);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  // 채팅 메시지 보내기 (오른쪽 채팅방 자신, 상대방 채팅)
-  const chatingPost = (event) => {
+  // 채팅 메시지 보내기
+  const msgPost = (event) => {
     if (event.key === "Enter") {
       if (event.shiftKey) {
         // Shift + Enter: 줄바꿈 허용
@@ -135,8 +131,13 @@ export function Chating() {
               <textarea
                 className="flex-grow pr-3 bg-transparent border-none outline-none resize-none no-scrollbar"
                 placeholder="메세지를 보내보세요!"
-                onChange={handleTextArea}
-                onKeyDown={chatingPost}
+                onChange={(e) => {
+                  handleResizeHeight();
+                  handleInputCounter(e);
+                }}
+                onKeyDown={(e) => {
+                  msgPost(e);
+                }}
                 maxLength={textMaxLen}
                 ref={textarea}
                 required

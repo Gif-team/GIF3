@@ -17,51 +17,43 @@ function getDate(value) {
   const betweenTime = Math.floor(
     (today.getTime() - timeValue.getTime()) / 1000 / 60
   );
-  if (betweenTime < 1) return "방금전";
-  if (betweenTime < 60) {
-    return `${betweenTime}분전`;
-  }
-
   const betweenTimeHour = Math.floor(betweenTime / 60);
-  if (betweenTimeHour < 24) {
-    return `${betweenTimeHour}시간전`;
-  }
-
   const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-  if (betweenTimeDay < 365) {
-    return `${betweenTimeDay}일전`;
-  }
 
-  return `${Math.floor(betweenTimeDay / 365)}년전`;
+  if (betweenTime < 1) return "방금전";
+  else if (betweenTime < 60) return `${betweenTime}분전`;
+  else if (betweenTimeHour < 24) return `${betweenTimeHour}시간전`;
+  else if (betweenTimeDay < 365) return `${betweenTimeDay}일전`;
+  else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
 
 export function Post({ post, filter, search }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
 
+  console.log(filter);
+  console.log(search);
+
   useEffect(() => {
-    if (filter === null && search === "") {
-      return;
-    }
     if (!post.title.includes(search)) {
       setHidden(true);
     }
-    if (filter.category !== null && post.category !== filter) {
+    if (post.category !== null && post.category !== filter) {
       setHidden(true);
     }
-    if (filter.building !== null && post.building !== filter) {
+    if (post.building.id !== null && post.building.id !== filter) {
       setHidden(true);
     }
-    if (filter.floor !== null && post.floor !== filter) {
+    if (post.building.floor !== null && post.building.floor !== filter) {
       setHidden(true);
     }
-  }, [filter, search, post.building, post.category, post.floor, post.title]);
+  }, [filter, search, post]);
   return (
     <div
-      onClick={() => nav(`/posts/${post.id}`)}
+      onClick={() => nav(`/post/${post.id}`)}
       className={`${
         hidden ? "hidden" : null
-      }w-[200px] m-3 h-[340px] rounded-[8px] border-gray-border border justify-between`}
+      } w-[200px] m-3 h-[340px] rounded-lg border-gray-border border justify-between`}
     >
       <img className="w-full h-[200px]" src={blueLogo} alt="게시물 사진" />
       <div className="gap-3 flex flex-col justify-center m-[12px]">
@@ -71,7 +63,7 @@ export function Post({ post, filter, search }) {
             post.building.floor
           }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
         </div>
-        <span className="text-gray-fee">{}</span>
+        <span className="text-gray-fee">사례금:{post.price}원</span>
       </div>
     </div>
   );
