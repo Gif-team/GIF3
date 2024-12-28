@@ -284,9 +284,9 @@ export function Detail() {
             <section className="flex flex-col gap-3">
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <p className="text-sm font-bold text-gray-400">
-                {data.category ? "찾았습니다" : "잃어버렸습니다" || "category"}
-                {" · "}
-                {data.realtime.split("T")[0] || "realTime"}
+                {`${data.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
+                  data.building.floor
+                }층 ∙ ${where(data.building.id)} ∙ ${getDate(data.realtime)}`}
               </p>
               <p className="text-base font-bold">
                 사례금 : {data.price || "price"}원

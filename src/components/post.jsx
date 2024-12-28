@@ -3,11 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function where(lo) {
-  if (lo === 1) {
-    return "기숙사";
-  } else if (lo === 2) {
-    return "본관";
-  } else return "금봉관";
+  if (lo === 1) return "기숙사";
+  else if (lo === 2) return "본관";
+  else return "금봉관";
 }
 
 function getDate(value) {
