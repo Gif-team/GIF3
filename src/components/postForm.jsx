@@ -120,14 +120,14 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   };
 
   // 유효성 검사
-  const isFormValid =
-    title.trim() !== "" &&
-    amount.trim() !== "" &&
-    description.trim() !== "" &&
-    selectedLostItem.trim() !== "" &&
-    selectedGwan.trim() !== "" &&
-    selectedFloor.trim() !== "" &&
-    imgFiles.length > 0;
+  // const isFormValid =
+  //   title.trim() !== "" &&
+  //   amount.trim() !== "" &&
+  //   description.trim() !== "" &&
+  //   selectedLostItem.trim() !== "" &&
+  //   selectedGwan.trim() !== "" &&
+  //   selectedFloor.trim() !== "" &&
+  //   imgFiles.length > 0;
 
   return (
     <div className="flex flex-col items-center w-full h-max">
