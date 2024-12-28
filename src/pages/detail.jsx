@@ -108,7 +108,7 @@ export function Detail() {
         .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setData(res.data);
-          setLikeCount(res.data.LikeNumber);
+          setLikeCount(res.data.likeNumber);
         });
     };
 
@@ -193,7 +193,7 @@ export function Detail() {
   // 끌어올리기
   const PullPost = () => {
     axios
-      .post(`${url}/post/${data.Param.id}`, { withCredentials: true })
+      .post(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
       })
@@ -205,7 +205,7 @@ export function Detail() {
   // 게시물 삭제
   const DeletePost = () => {
     axios
-      .delete(`${url}/post/${data.Param.id}`, { withCredentials: true })
+      .delete(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         navigate("/main");
@@ -259,13 +259,16 @@ export function Detail() {
             <div className="flex gap-3 ml-auto">
               <button
                 className="px-4 py-3 text-white bg-red-500 rounded-3xl"
-                onClick={() => DeletePost}
+                onClick={() => {
+                  DeletePost();
+                  navigate("/main");
+                }}
               >
                 삭제하기
               </button>
               <button
                 className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
-                onClick={() => navigate(`/postEdit${data.Param.id}`)}
+                onClick={() => navigate(`/postEdit${Param.id}`)}
               >
                 수정하기
               </button>
@@ -285,21 +288,19 @@ export function Detail() {
             <section className="flex flex-col gap-3">
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <p className="text-sm font-bold text-gray-400">
-                {data.Category || "category"} · {data.realTime || "realTime"}
+                {data.category || "category"} · {data.realtime || "realTime"}
               </p>
               <p className="text-base font-bold">
-                사례금 : {data.Price || "price"}원
+                사례금 : {data.price || "price"}원
               </p>
             </section>
             {/* 좋아요 */}
             <section className="flex items-center gap-3 ml-auto h-max">
               <Heart onClick={ToggleLike} stroke={likeColor} />
-              <p className="text-2xl font-black text-gray-500">
-                {likeCount || 0}
-              </p>
+              <p className="text-2xl font-black text-gray-500">{likeCount}</p>
             </section>
           </div>
-          <p className="text-sm font-normal">{data.Content || "content"}</p>
+          <p className="text-sm font-normal">{data.content || "content"}</p>
         </main>
       </div>
     </div>
