@@ -26,7 +26,7 @@ export function Main({ search }) {
       .get(`${url}/post`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        setPosts(res.data.map((entry) => entry[1]));
+        setPosts(Object.entries(res.data).map((entry) => entry[1]));
       })
       .catch((err) => {
         console.log(err);
@@ -49,14 +49,19 @@ export function Main({ search }) {
           {loading ? ( // 추가: 로딩 중 표시
             <div>로딩 중...</div>
           ) : posts.length > 0 ? (
-            posts.map((post) => (
-              <Post
-                key={post[0]}
-                post={post[1]}
-                filter={filter}
-                search={search}
-              />
-            ))
+            posts.map(
+              (post) => (
+                console.log(post),
+                (
+                  <Post
+                    key={post[0]}
+                    post={post[1]}
+                    filter={filter}
+                    search={search}
+                  />
+                )
+              )
+            )
           ) : (
             <div>게시물이 없습니다.</div>
           )}
