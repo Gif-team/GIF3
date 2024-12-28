@@ -39,7 +39,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   useEffect(() => {
     if (postData) {
       setTitle(postData.title || "");
-      setAmount(Number(postData.price) || "");
+      setAmount(postData.price || "");
       setDescription(postData.content || "");
       setSelectedLostItem(
         postData.category ? lostItems[0] : lostItems[1] || ""
