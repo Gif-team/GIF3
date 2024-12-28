@@ -16,7 +16,7 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 import TrashCan from "../imgs/trashcan.svg";
 
-export default function PostForm({ postData = {}, postImgs = {} }) {
+export default function PostForm({ postData = {}, postImgs = {}, postEditId }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -35,9 +35,14 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
+  // 알림 팝업
+  useEffect(() => {
+    setAlertPopUp(alertPopUp);
+  }, [alertPopUp]);
+
   // 상태 초기화
   useEffect(() => {
-    if (postData) {
+    if (postData && Object.keys(postData).length > 0) {
       setTitle(postData.title || "");
       setAmount(String(postData.price) || "");
       setDescription(postData.content || "");
@@ -47,12 +52,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
       setSelectedGwan(gwans[postData.building?.id - 1] || "");
       setSelectedFloor(floors[postData.building?.floor - 1] || "");
     }
-  }, [postData]);
-
-  // 알림 팝업
-  useEffect(() => {
-    setAlertPopUp(alertPopUp);
-  }, [alertPopUp]);
+  }, []);
 
   // 이미지 배열에 추가
   const addImage = () => {
@@ -72,6 +72,59 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
     try {
       const postResponse = await axios.post(
         `${url}/post/create`,
+        {
+          title,
+          price: Number(amount),
+          content: description,
+          category: Boolean(!lostItems.indexOf(selectedLostItem)),
+          building: {
+            id: gwans.indexOf(selectedGwan) + 1,
+            floor:
+              selectedGwan === "기숙사"
+                ? floors.indexOf(selectedFloor) + 1
+                : floors.indexOf(selectedFloor.slice(0, 4)) + 1,
+          },
+        },
+        { withCredentials: true }
+      );
+
+      // 서버로부터 받은 postId 저장 (이미지 업로드 시 사용)
+      const postId = postResponse.data.result.id;
+
+      // 이미지 업로드 기능
+      for (let file of imgFiles) {
+        // 1. 각 이미지마다 해당하는 파일명, 파일형을 보낸 후 url을 받아옴
+        const presignedUrlRes = await axios.post(
+          `${url}/s3/presigned-url`,
+          {
+            fileName: file.name,
+            fileType: file.type,
+          },
+          { withCredentials: true }
+        );
+
+        const presignedUrl = presignedUrlRes.data.url;
+
+        // 2. 받아온 url로 파일을 보냄
+        await axios.post(presignedUrl, file, { withCredentials: true });
+
+        // 3. 이미지 속성 db에 저장
+        await axios.post(
+          `${url}/image/save-image`,
+          { postId: postId, fileName: file.name },
+          { withCredentials: true }
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 게시물 수정
+  const revisePost = async () => {
+    try {
+      const postResponse = await axios.patch(
+        `${url}/post/${postEditId}`,
         {
           title,
           price: Number(amount),
@@ -248,7 +301,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
           }`}
           disabled={!isFormValid}
           onClick={() => {
-            sendPost(); // 첫 번째 함수 실행
+            postEditId ? revisePost() : sendPost();
             navigate("/main"); // 두 번째 함수 실행
           }}
         >
