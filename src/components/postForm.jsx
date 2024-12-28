@@ -125,8 +125,11 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
     title.trim() !== "" &&
     amount.trim() !== "" &&
     description.trim() !== "" &&
+    selectedLostItem &&
     selectedLostItem.trim() !== "" &&
+    selectedGwan &&
     selectedGwan.trim() !== "" &&
+    selectedFloor &&
     selectedFloor.trim() !== "" &&
     imgFiles.length > 0;
 
