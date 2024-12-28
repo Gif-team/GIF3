@@ -2,6 +2,7 @@ import PostForm from "../components/postForm";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { url } from "./config";
 
 export function PostEdit() {
   const Param = useParams();
@@ -12,8 +13,9 @@ export function PostEdit() {
   useEffect(() => {
     const getPost = () => {
       axios
-        .get(`/api/post/${Param.id}`, { withCredentials: true })
+        .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
+          console.log(res.data);
           setPost(res.data);
         })
         .catch((error) => console.error(error));
@@ -21,8 +23,9 @@ export function PostEdit() {
 
     const getImgs = () => {
       axios
-        .get(`/api/image/${Param.id}`, { withCredentials: true })
+        .get(`${url}/image/${Param.id}`, { withCredentials: true })
         .then((res) => {
+          console.log(res.data);
           setImgs(res.data);
         })
         .catch((error) => console.error(error));
