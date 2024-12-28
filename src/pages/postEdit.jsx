@@ -35,8 +35,5 @@ export function PostEdit() {
     getImgs();
   }, [Param.id]);
 
-  console.log(post);
-  console.log(imgs);
-
   return <PostForm postData={post} postImgs={imgs} />;
 }
