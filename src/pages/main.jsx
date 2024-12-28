@@ -26,7 +26,7 @@ export function Main({ search }) {
       .get(`${url}/post`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
-        setPosts(Object.entries(res.data).map((entry) => entry[1]));
+        setPosts(Object.values(res.data.posts));
       })
       .catch((err) => {
         console.log(err);
