@@ -26,25 +26,6 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   const [selectedGwan, setSelectedGwan] = useState("");
   const [selectedFloor, setSelectedFloor] = useState("");
 
-  useEffect(() => {
-    // 상태 초기화
-    if (postData) {
-      setTitle(postData.title || "");
-      setAmount(Number(postData.price) || "");
-      setDescription(postData.content || "");
-      setSelectedLostItem(
-        Boolean(!postData.category.indexOf(selectedLostItem)) || ""
-      );
-      setSelectedGwan(postData.building?.id || "");
-      setSelectedFloor(
-        postData.building?.floor === "기숙사"
-          ? postData.building?.floor.indexOf(selectedFloor) + 1
-          : postData.building?.floor.indexOf(selectedFloor.slice(0, 4)) + 1 ||
-              ""
-      );
-    }
-  }, [postData]);
-
   const [imgFiles, setImgFiles] = useState([]);
   const imgRef = useRef();
 
@@ -53,6 +34,20 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
   const floors = ["1층", "2층", "3층", "4층", "5층"];
 
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
+
+  // 상태 초기화
+  useEffect(() => {
+    if (postData) {
+      setTitle(postData.title || "");
+      setAmount(Number(postData.price) || "");
+      setDescription(postData.content || "");
+      setSelectedLostItem(
+        postData.category ? lostItems[0] : lostItems[1] || ""
+      );
+      setSelectedGwan(postData.building?.id || "");
+      setSelectedFloor(floors[postData.building?.floor] || "");
+    }
+  }, [postData]);
 
   // 알림 팝업
   useEffect(() => {
