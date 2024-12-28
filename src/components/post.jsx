@@ -32,8 +32,6 @@ export function Post({ post, filter, search = {} }) {
   const [hidden, setHidden] = useState(false);
   const [imgs, setImgs] = useState([]);
 
-  console.log(filter);
-
   // useEffect(() => {
   //   if (!post.title.includes(search)) {
   //     setHidden(true);
@@ -61,6 +59,9 @@ export function Post({ post, filter, search = {} }) {
     getImgs();
   }, [post]);
 
+  console.log(filter);
+  console.log(imgs);
+
   return (
     <div
       onClick={() => nav(`/post/${post.id}`)}
@@ -68,9 +69,9 @@ export function Post({ post, filter, search = {} }) {
         hidden ? "hidden" : null
       }`}
     >
-      {imgs.map((img) => (
+      {/* {imgs.map((img) => (
         <img src={img} alt="게시물 사진" />
-      ))}
+      ))} */}
       <div className="gap-3 flex flex-col justify-center m-[12px]">
         <h3 className="text-[21px] font-bold">{post.title}</h3>
         <div className=" opacity-[0.5] text-[13px]">
