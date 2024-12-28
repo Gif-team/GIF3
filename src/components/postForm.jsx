@@ -37,7 +37,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
 
   // 상태 초기화
   useEffect(() => {
-    if (postData) {
+    if (postData && Object.keys(postData).length > 0) {
       setTitle(postData.title || "");
       setAmount(String(postData.price) || "");
       setDescription(postData.content || "");
@@ -47,7 +47,7 @@ export default function PostForm({ postData = {}, postImgs = {} }) {
       setSelectedGwan(gwans[postData.building?.id - 1] || "");
       setSelectedFloor(floors[postData.building?.floor - 1] || "");
     }
-  }, [postData]);
+  }, []);
 
   // 알림 팝업
   useEffect(() => {
