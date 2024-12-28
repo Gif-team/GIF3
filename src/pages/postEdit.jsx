@@ -1,5 +1,6 @@
 import PostForm from "../components/postForm";
-import { useEffect, useState, useParams } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export function PostEdit() {
