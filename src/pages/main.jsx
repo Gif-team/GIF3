@@ -36,8 +36,6 @@ export function Main({ search }) {
       });
   }, []);
 
-  console.log(posts);
-
   return (
     <div className="flex flex-col items-center w-full ">
       {filter ? <FilterPopup setFilter={setFilter} /> : null}
@@ -48,8 +46,8 @@ export function Main({ search }) {
         <div className="flex flex-wrap">
           {loading ? ( // 추가: 로딩 중 표시
             <div>로딩 중...</div>
-          ) : posts ? (
-            posts.map((post) => (
+          ) : Object.entries(posts).length > 0 ? (
+            Object.entries(posts).map((post) => (
               <Post key={post.id} post={post} filter={filter} search={search} />
             ))
           ) : (
