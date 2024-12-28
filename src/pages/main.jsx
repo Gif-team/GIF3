@@ -26,7 +26,6 @@ export function Main({ search }) {
     axios
       .get(`${url}/post`, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
         setPosts(Object.values(res.data.posts));
       })
       .catch((err) => {

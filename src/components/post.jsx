@@ -50,18 +50,12 @@ export function Post({ post, filter, search = {} }) {
       axios
         .get(`/api/image/${post.id}`, { withCredentials: true })
         .then((res) => {
-          console.log(res);
-          console.log(res.data);
-          console.log(res.data.result);
           setImgs(res.data.result);
         })
         .catch((error) => console.error(error));
     };
     getImgs();
   }, [post]);
-
-  console.log(filter);
-  console.log(imgs);
 
   return (
     <div
