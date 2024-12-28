@@ -5,7 +5,13 @@ import Gwan from "../imgs/gwan.svg";
 import LostItem from "../imgs/lostItem.svg";
 
 export function FilterPopup({ setFilter }) {
-  console.log("setFilter", setFilter);
+  const lostItems = ["찾았습니다", "잃어버렸습니다"];
+  const gwans = ["본관", "금봉관", "기숙사"];
+  const floors = ["1층", "2층", "3층", "4층", "5층"];
+
+  const [selectedLostItem, setSelectedLostItem] = useState("");
+  const [selectedGwan, setSelectedGwan] = useState("");
+  const [selectedFloor, setSelectedFloor] = useState("");
 
   // filter 뒷 배경 움직임 막기
   useEffect(() => {
@@ -19,25 +25,6 @@ export function FilterPopup({ setFilter }) {
       html.style.overflowY = "auto";
     };
   }, [setFilter]);
-
-  const lostItems = ["찾았습니다", "잃어버렸습니다"];
-  const gwans = ["본관", "금봉관", "기숙사"];
-  const floors = ["1층", "2층", "3층", "4층", "5층"];
-
-  const [selectedLostItem, setSelectedLostItem] = useState("");
-  const [selectedGwan, setSelectedGwan] = useState("");
-  const [selectedFloor, setSelectedFloor] = useState("");
-
-  //저장된 필터 정보 가져와서 필터 초기화
-  useEffect(() => {
-    const storedFilter = localStorage.getItem("filter");
-    if (storedFilter) {
-      const { category, building_Id, floor } = JSON.parse(storedFilter);
-      setSelectedLostItem(lostItems[category - 1]);
-      setSelectedGwan(gwans[building_Id - 1]);
-      setSelectedFloor(floors[floor - 1]);
-    }
-  }, [floors, gwans, lostItems]);
 
   // 필터 적용하기, 배열이름.indexOf(찾고싶은 값)
   const handleApply = () => {
@@ -54,7 +41,16 @@ export function FilterPopup({ setFilter }) {
     setFilter(false);
   };
 
-  console.log(storedFilter);
+  //저장된 필터 정보 가져와서 필터 초기화
+  useEffect(() => {
+    const storedFilter = localStorage.getItem("filter");
+    if (storedFilter) {
+      const { category, building_Id, floor } = JSON.parse(storedFilter);
+      setSelectedLostItem(lostItems[category - 1]);
+      setSelectedGwan(gwans[building_Id - 1]);
+      setSelectedFloor(floors[floor - 1]);
+    }
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 bg-[rgba(1,1,1,0.3)] w-full h-full z-30">

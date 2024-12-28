@@ -27,11 +27,10 @@ function getDate(value) {
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
 
-export function Post({ post, filter, search }) {
+export function Post({ post, search }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
 
-  console.log(filter);
   console.log(search);
   console.log(post);
 

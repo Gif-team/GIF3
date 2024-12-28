@@ -16,8 +16,7 @@ import ChatBtn from "../imgs/chatBtn.svg";
 
 export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  const [search, setSearch] = useState(search);
-  const [filter, setFilter] = useState(filter);
+  const [filter, setFilter] = useState(false);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); // 추가: 로딩 상태
   const navigator = useNavigate();
