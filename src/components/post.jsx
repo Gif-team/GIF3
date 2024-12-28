@@ -30,7 +30,7 @@ function getDate(value) {
 export function Post({ post, filter, search = {} }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
-  const [imgs, setImgs] = useState([]);
+  const [imgs, setImgs] = useState("");
 
   // useEffect(() => {
   //   if (!post.title.includes(search)) {
@@ -52,7 +52,10 @@ export function Post({ post, filter, search = {} }) {
       axios
         .get(`/api/image/${post.id}`, { withCredentials: true })
         .then((res) => {
-          setImgs(res.data);
+          console.log(res);
+          console.log(res.data);
+          console.log(res.data.result);
+          setImgs(res.data.result);
         })
         .catch((error) => console.error(error));
     };
