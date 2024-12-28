@@ -264,7 +264,7 @@ export function Detail() {
               </button>
               <button
                 className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
-                onClick={() => navigate(`/postEdit${Param.id}`)}
+                onClick={() => navigate(`/postEdit/${Param.id}`)}
               >
                 수정하기
               </button>
