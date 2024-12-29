@@ -145,7 +145,7 @@ export function Detail() {
 
   const DeletePost = () => {
     axios
-      .delete(`${url}/post/${Param.id}`, { withCredentials: true })
+      .delete(`${url}/post/${Param.id}/delete`, { withCredentials: true })
       .then(() => navigate("/main"))
       .catch((err) => console.log(err));
   };
