@@ -51,6 +51,7 @@ export function Detail() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
+    getState();
     // 게시물, 이미지, 로그인된 유저 정보, 채팅방 정보 요청
     const fetchData = async () => {
       try {
