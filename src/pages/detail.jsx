@@ -173,7 +173,7 @@ export function Detail() {
   // 끌어올리기
   const PullPost = () => {
     axios
-      .post(
+      .put(
         `${url}/post/${Param.id}/update`,
         {
           postId: Param.id,
