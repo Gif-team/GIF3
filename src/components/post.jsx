@@ -31,44 +31,25 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    // 필터가 적용되지 않은 경우, 게시물을 숨기지 않음
-    if (
-      filter.title === 0 &&
-      filter.category === 0 &&
-      filter.building.id === 0 &&
-      filter.floor === 0
-    ) {
-      setHidden(false);
-      return;
-    }
-
-    // 검색어 필터
-    if (filter.title !== 0 && !post.title.includes(filter.title)) {
-      setHidden(true);
-      return;
-    }
-
-    // 카테고리 필터
-    if (filter.category !== 0 && post.category !== filter.category) {
-      setHidden(true);
-      return;
-    }
-
-    // 건물 ID 필터
-    if (filter.building.id !== 0 && post.building.id !== filter.building.id) {
-      setHidden(true);
-      return;
-    }
-
-    // 층수 필터
-    if (filter.floor !== 0 && post.building.floor !== filter.floor) {
-      setHidden(true);
-      return;
-    }
-
-    // 모든 조건을 만족하면 숨기지 않음
+    // 초기값으로 숨김 해제
     setHidden(false);
-  }, [filter, post]);
+
+    // 검색 조건 확인
+    if (search && !post.title.includes(search)) {
+      setHidden(true);
+      return;
+    }
+
+    // 필터 조건 확인
+    if (
+      (filter.category !== 0 && post.category !== filter.category) || // 카테고리 필터
+      (filter.building_Id !== 0 && post.building.id !== filter.building_Id) || // 건물 ID 필터
+      (filter.floor !== 0 && post.building.floor !== filter.floor) // 층수 필터
+    ) {
+      setHidden(true);
+      return;
+    }
+  }, [filter, search, post]);
 
   useEffect(() => {
     const getImgs = () => {
