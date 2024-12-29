@@ -39,7 +39,7 @@ export function Detail() {
   const Param = useParams();
   const navigate = useNavigate();
 
-  const [likeBool, setLikeBool] = useState(false);
+  const [likeBool, setLikeBool] = useState(getLikeState());
   const [likeColor, setLikeColor] = useState("#E9E9E9");
   const [likeCount, setLikeCount] = useState(0);
   const [mount, setMount] = useState(false);
@@ -50,6 +50,21 @@ export function Detail() {
   const [data, setData] = useState([]);
   const [chatRoom, setChatRoom] = useState([]);
   const [user, setUser] = useState([]);
+
+  function getLikeState() {
+    axios
+      .get(`${url}/post/${Param.id}/like-status`, {
+        headers: {
+          withCredentials: true,
+        },
+      })
+      .then((res) => {
+        return res.data.like;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
