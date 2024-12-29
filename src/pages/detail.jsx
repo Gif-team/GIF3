@@ -54,9 +54,7 @@ export function Detail() {
   function getLikeState() {
     axios
       .get(`${url}/post/${Param.id}/like-status`, {
-        headers: {
-          withCredentials: true,
-        },
+        withCredentials: true,
       })
       .then((res) => {
         return res.data.like;
