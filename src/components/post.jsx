@@ -31,6 +31,8 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
+    if (filter.title === 0 && filter.category === 0 && filter.building.id === 0)
+      return;
     if (!post.title.includes(search)) {
       setHidden(true);
     }
