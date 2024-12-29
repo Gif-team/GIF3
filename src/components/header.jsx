@@ -33,7 +33,7 @@ export function Header() {
             onChange={(e) => setSearch(e.target.value)} // `search` 값 변경 처리
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                nav("/main", { state: { search: search } }); // 엔터 키를 누르면 검색 결과 페이지로 이동
+                setSearch(e.target.value);
               }
             }}
           />
