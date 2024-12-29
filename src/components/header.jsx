@@ -9,11 +9,9 @@ export function Header() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const nav = useNavigate();
 
-  // 초기값을 localStorage에서 가져오기
   const [search, setSearch] = useState(localStorage.getItem("search") || "");
 
   useEffect(() => {
-    // search 상태가 변경될 때마다 localStorage에 저장
     localStorage.setItem("search", search);
   }, [search]);
 
@@ -39,7 +37,7 @@ export function Header() {
             placeholder="찾고 싶은 물건을 입력해보세요!"
             className="focus:outline-primary-primary h-[40px] rounded-lg bg-primary-bg w-[600px] pl-10"
             value={search}
-            onChange={(e) => setSearch(e.target.value)} // state 변경만 처리
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </section>
