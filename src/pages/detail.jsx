@@ -50,40 +50,33 @@ export function Detail() {
 
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-
   function getState() {
     axios
       .get(`${url}/post/${Param.id}`, { withCredentials: true })
       .then((res) => {
-        setLikeBool(res.data.likeState);
+        setLikeBool(res.data.liketrueorfalse);
+        setLikeColor(res.data.liketrueorfalse ? "#ff6969" : "#E9E9E9");
       });
   }
-
   // 좋아요 상태 토글
   const ToggleLike = () => {
-    // 좋아요 상태 토글
-    const newLikeBool = !likeBool;
-    const newLikeColor = newLikeBool ? "#ff6969" : "#E9E9E9";
-    const newLikeCount = newLikeBool ? likeCount + 1 : likeCount - 1;
-
-    // UI 업데이트
-    setLikeBool(newLikeBool);
-    setLikeColor(newLikeColor);
-    setLikeCount(newLikeCount);
+    getState();
+    setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
+    setLikeCount((prev) => (likeBool ? prev + 1 : prev - 1));
 
     // 서버로 좋아요 상태 전송
     axios
       .post(
         `${url}/post/${Param.id}/like`,
-        { like: newLikeBool },
+        { like: likeBool },
         { withCredentials: true }
       )
       .catch((err) => {
         console.error(err);
         // 서버 요청 실패 시 상태 복구
-        setLikeBool(likeBool);
-        setLikeColor(likeColor);
-        setLikeCount(likeCount);
+        setLikeBool(!likeBool);
+        setLikeColor(!likeBool ? "#ff6969" : "#E9E9E9");
+        setLikeCount((prev) => (!likeBool ? prev + 1 : prev - 1));
       });
   };
 
@@ -262,30 +255,33 @@ export function Detail() {
           )}
         </header>
         <div className="w-full h-[2px] bg-primary-primary"></div>
-        <main className="flex flex-col w-full gap-8 px-1 pt-6 pb-12">
-          <div className="text-[20px]">{data.title}</div>
-          <div className="flex gap-2 text-primary-gray-2">
-            <div>{where(data.location)}</div>
-            <div>·</div>
-            <div>{getDate(data.createdAt)}</div>
+        <main className="flex flex-col w-full gap-8 px-1 pt-6">
+          <div className="flex">
+            <section className="flex flex-col gap-3">
+              <h1 className="text-2xl font-bold">{data.title}</h1>
+              <div className="flex items-center gap-3">
+                <span className="text-primary-gray">{getDate(data.date)}</span>
+                <span className="px-4 py-2 text-xs text-primary-primary bg-[#F2F8FF] rounded-3xl">
+                  {where(data.location)}
+                </span>
+              </div>
+              <p className="text-lg font-semibold text-primary-gray">
+                {data.content}
+              </p>
+            </section>
           </div>
-          <div className="text-[15px]">{data.content}</div>
-          <div className="flex items-center justify-between mt-10">
-            <div className="flex items-center gap-4">
-              <div
+          <footer className="flex justify-end w-full gap-3">
+            <div className="flex items-center gap-2">
+              <Heart
                 className="cursor-pointer"
                 onClick={ToggleLike}
-                style={{ color: likeColor }}
-              >
-                <Heart />
-              </div>
-              <div>{likeCount}명</div>
+                fill={likeColor}
+              />
+              <span className="text-primary-gray">{likeCount}</span>
             </div>
-          </div>
+          </footer>
         </main>
       </div>
     </div>
   );
 }
-
-export default Detail;
