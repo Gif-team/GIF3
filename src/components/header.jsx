@@ -29,12 +29,10 @@ export function Header() {
             type="text"
             placeholder="찾고 싶은 물건을 입력해보세요!"
             className="focus:outline-primary-primary h-[40px] rounded-lg bg-primary-bg w-[600px] pl-10"
-            value={search} // `search` 상태 바인딩
-            onChange={(e) => setSearch(e.target.value)} // `search` 값 변경 처리
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setSearch(e.target.value);
-              }
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              localStorage.setItem("search", e.target.value);
             }}
           />
         </div>

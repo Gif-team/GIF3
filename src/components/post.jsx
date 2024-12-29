@@ -25,15 +25,13 @@ function getDate(value) {
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
 
-export function Post({ post, filter, search = {} }) {
+export function Post({ post, filter }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    console.log("post", post);
-    console.log("filter", filter);
-    console.log("search", search);
+    const search = localStorage.getItem("search");
 
     if (search === "") {
       setHidden(false);
