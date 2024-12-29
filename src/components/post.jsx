@@ -44,7 +44,7 @@ export function Post({ post, filter, search = {} }) {
 
     // 필터 조건 확인
     if (
-      (filter.category !== 0 && post.category !== filter.category) || // 카테고리 필터
+      (filter.category !== 0 && post.category !== Boolean(filter.category)) || // 카테고리 필터
       (filter.building_Id !== 0 && post.building.id !== filter.building_Id) || // 건물 ID 필터
       (filter.floor !== 0 && post.building.floor !== filter.floor) // 층수 필터
     ) {
