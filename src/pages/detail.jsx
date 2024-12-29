@@ -28,7 +28,7 @@ function getDate(value) {
 
   if (betweenTime < 1) return "방금전";
   else if (betweenTime < 60) return `${betweenTime}분전`;
-  else if (betweenTimeHour < 24) return `${betweenTimeHour}시간전`;
+  else if (betweenTimeHour < 24) return `${betweenTimeHour + 9}시간전`;
   else if (betweenTimeDay < 365) return `${betweenTimeDay}일전`;
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
