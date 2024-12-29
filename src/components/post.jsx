@@ -35,14 +35,8 @@ export function Post({ post, filter, search = {} }) {
     console.log("filter", filter);
     console.log("search", search);
 
-    // 초기값으로 숨김 해제
+    // 기본 상태 초기화
     setHidden(false);
-
-    // 검색 조건 확인
-    // if (search && !post.title.includes(String(search))) {
-    //   setHidden(true);
-    //   return;
-    // }
 
     // 필터 조건 확인
     if (
@@ -51,8 +45,7 @@ export function Post({ post, filter, search = {} }) {
       (filter.building_Id !== 0 && post.building.id !== filter.building_Id) || // 건물 ID 필터
       (filter.floor !== 0 && post.building.floor !== Number(filter.floor)) // 층수 필터
     ) {
-      setHidden(true);
-      return;
+      setHidden(true); // 조건이 맞지 않으면 숨김 처리
     }
   }, [filter, search, post]);
 
