@@ -39,10 +39,10 @@ export function Post({ post, filter, search = {} }) {
     setHidden(false);
 
     // 검색 조건 확인
-    if (search && !post.title.includes(String(search))) {
-      setHidden(true);
-      return;
-    }
+    // if (search && !post.title.includes(String(search))) {
+    //   setHidden(true);
+    //   return;
+    // }
 
     // 필터 조건 확인
     if (
@@ -71,8 +71,8 @@ export function Post({ post, filter, search = {} }) {
   return (
     <div
       onClick={() => nav(`/post/${post.id}`)}
-      className={` w-[200px] m-3 h-[340px] cursor-pointer rounded-lg border-gray-border border justify-between ${
-        hidden ? "hidden" : null
+      className={`w-[200px] m-3 h-[340px] cursor-pointer rounded-lg border-gray-border border justify-between ${
+        hidden ? "hidden" : ""
       }`}
     >
       {/* {imgs.map((img) => (
