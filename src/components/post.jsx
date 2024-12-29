@@ -30,20 +30,20 @@ export function Post({ post, filter, search = {} }) {
   const [hidden, setHidden] = useState(false);
   const [imgs, setImgs] = useState("");
 
-  // useEffect(() => {
-  //   if (!post.title.includes(search)) {
-  //     setHidden(true);
-  //   }
-  //   if (post.category !== null && post.category !== filter.category) {
-  //     setHidden(true);
-  //   }
-  //   if (post.building.id !== null && post.building.id !== filter.building_id) {
-  //     setHidden(true);
-  //   }
-  //   if (post.building.floor !== null && post.building.floor !== filter.floor) {
-  //     setHidden(true);
-  //   }
-  // }, [filter, search, post]);
+  useEffect(() => {
+    if (!post.title.includes(search)) {
+      setHidden(true);
+    }
+    if (post.category !== null && post.category !== filter.category) {
+      setHidden(true);
+    }
+    if (post.building.id !== null && post.building.id !== filter.building_id) {
+      setHidden(true);
+    }
+    if (post.building.floor !== null && post.building.floor !== filter.floor) {
+      setHidden(true);
+    }
+  }, [filter, search, post]);
 
   useEffect(() => {
     const getImgs = () => {
@@ -60,7 +60,7 @@ export function Post({ post, filter, search = {} }) {
   return (
     <div
       onClick={() => nav(`/post/${post.id}`)}
-      className={` w-[200px] m-3 h-[340px] rounded-lg border-gray-border border justify-between ${
+      className={` w-[200px] m-3 h-[340px] cursor-pointer rounded-lg border-gray-border border justify-between ${
         hidden ? "hidden" : null
       }`}
     >
