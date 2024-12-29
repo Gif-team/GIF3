@@ -173,17 +173,9 @@ export function Detail() {
   // 끌어올리기
   const PullPost = () => {
     axios
-      .put(
-        `${url}/post/${Param.id}/update`,
-        {
-          postId: Param.id,
-        },
-        {
-          headers: {
-            withCredentials: true,
-          },
-        }
-      )
+      .put(`${url}/post/${Param.id}/update`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res.data);
       })
