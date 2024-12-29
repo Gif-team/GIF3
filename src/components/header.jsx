@@ -1,13 +1,22 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import blueLogo from "../imgs/logo1.svg";
 import searchIcon from "../imgs/search.svg";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AlertContext } from "../context/alertContext";
-import { useNavigate } from "react-router-dom";
 
 export function Header() {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
   const nav = useNavigate();
-  const [search, setSearch] = useState("");
+
+  // 초기값을 localStorage에서 가져오기
+  const [search, setSearch] = useState(localStorage.getItem("search") || "");
+
+  useEffect(() => {
+    // search 상태가 변경될 때마다 localStorage에 저장
+    localStorage.setItem("search", search);
+  }, [search]);
+
   return (
     <header className="fixed z-20 flex items-center justify-between w-full h-16 p-3 px-6 bg-white border-b-2 border-primary-primary">
       <section className="flex items-center flex-1">
@@ -30,10 +39,7 @@ export function Header() {
             placeholder="찾고 싶은 물건을 입력해보세요!"
             className="focus:outline-primary-primary h-[40px] rounded-lg bg-primary-bg w-[600px] pl-10"
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              localStorage.setItem("search", e.target.value);
-            }}
+            onChange={(e) => setSearch(e.target.value)} // state 변경만 처리
           />
         </div>
       </section>
