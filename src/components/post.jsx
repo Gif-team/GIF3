@@ -31,6 +31,8 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
+    console.log("post", post);
+    console.log("filter", filter);
     // 초기값으로 숨김 해제
     setHidden(false);
 
