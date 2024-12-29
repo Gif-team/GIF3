@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import axios from "axios";
 import { url } from "./config";
 import { AlertPopUp } from "../components/alertPopUp";
 import { AlertContext } from "../context/alertContext";
 import { Header } from "../components/header";
-
 import { ReactComponent as Heart } from "../imgs/heart.svg";
 import Profile from "../imgs/profile.svg";
 import LeftArrow from "../imgs/leftArrow.svg";
@@ -42,7 +40,6 @@ export function Detail() {
   const [likeBool, setLikeBool] = useState(false);
   const [likeColor, setLikeColor] = useState("#E9E9E9");
   const [likeCount, setLikeCount] = useState(0);
-  const [mount, setMount] = useState(false);
 
   const [img, setImg] = useState([]);
   const [imgCnt, setImgCnt] = useState(0);
@@ -51,30 +48,31 @@ export function Detail() {
   const [chatRoom, setChatRoom] = useState([]);
   const [user, setUser] = useState([]);
 
-  // 알림 팝업 상태
+  // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
+  // 좋아요 상태 토글
   const ToggleLike = () => {
-    setLikeBool(!likeBool);
+    const newLikeState = !likeBool;
+    setLikeBool(newLikeState); // 상태 변경
+    setLikeColor(newLikeState ? "#ff6969" : "#E9E9E9");
+    setLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
+
+    // 서버로 좋아요 상태 전송
+    axios
+      .post(
+        `${url}/post/${Param.id}/like`,
+        { like: newLikeState },
+        { withCredentials: true }
+      )
+      .catch((err) => {
+        console.error(err);
+        // 서버 요청 실패 시 상태 복구
+        setLikeBool(!newLikeState);
+        setLikeColor(!newLikeState ? "#ff6969" : "#E9E9E9");
+        setLikeCount((prev) => (!newLikeState ? prev + 1 : prev - 1));
+      });
   };
-
-  // 좋아요 상태 변경
-  useEffect(() => {
-    if (mount) {
-      setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
-      setLikeCount((prev) => (likeBool ? prev + 1 : prev - 1));
-
-      axios
-        .post(
-          `${url}/post/${Param.id}/like`,
-          { like: likeBool },
-          { withCredentials: true }
-        )
-        .catch((err) => console.log(err));
-    } else {
-      setMount(true);
-    }
-  }, [likeBool]);
 
   // 이미지 전환
   const changeImage = (direction) => {
@@ -86,96 +84,117 @@ export function Detail() {
   };
 
   useEffect(() => {
+    // 게시물 요청
     const getPost = () => {
       axios
         .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setData(res.data);
           setLikeCount(res.data.likeNumber);
-          setLikeBool(res.data.likeState);
-        })
-        .catch((err) => console.log(err));
+          setLikeBool(res.data.likeState); // 초기 좋아요 상태 설정
+          setLikeColor(res.data.likeState ? "#ff6969" : "#E9E9E9");
+        });
     };
 
+    // 이미지 요청
     const getImgs = () => {
       axios
-        .get(`${url}/post/${Param.id}/images`, { withCredentials: true })
+        .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setImg(res.data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     };
 
-    const getUserInfo = () => {
+    // 로그인된 유저 확인
+    const GetLoggedUserInfo = () => {
       axios
         .get(`${url}/auth/user`, { withCredentials: true })
         .then((res) => {
           setUser(res.data.result);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     };
 
-    const getChatRoom = () => {
+    // 채팅방 확인
+    const GetChatRoom = () => {
       axios
         .get(`${url}/chat/room`, { withCredentials: true })
         .then((res) => {
           setChatRoom(res.data.result);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     };
 
+    GetLoggedUserInfo();
+    GetChatRoom();
     getPost();
     getImgs();
-    getUserInfo();
-    getChatRoom();
   }, [Param.id]);
 
-  // 채팅방 생성
-  const CreateChatRoom = () => {
-    axios
-      .post(`${url}/chat/room`, {}, { withCredentials: true })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-    navigate("/chating");
-  };
-
-  // 채팅방 참여
-  const JoinChatRoom = () => {
-    axios
-      .post(
-        `${url}/chat/room/join/${chatRoom.id}`,
-        {},
-        { withCredentials: true }
-      )
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-    navigate("/chating");
-  };
-
+  // 채팅방 생성 및 참여
   const HandleChatRoom = () => {
-    if (Param.id === chatRoom.id) {
-      JoinChatRoom();
+    if (Param.id == chatRoom.id) {
+      axios
+        .post(`${url}/chat/room/join/${chatRoom.id}`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      navigate("/chating");
     } else {
-      CreateChatRoom();
+      axios
+        .post(`${url}/chat/room`, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      navigate("/chating");
     }
   };
 
+  // 끌어올리기
   const PullPost = () => {
     axios
       .post(
         `${url}/post/${Param.id}/update`,
-        { postId: Param.id },
-        { headers: { withCredentials: true } }
+        {
+          postId: Param.id,
+        },
+        {
+          headers: {
+            withCredentials: true,
+          },
+        }
       )
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
+  // 게시물 삭제
   const DeletePost = () => {
     axios
       .delete(`${url}/post/${Param.id}`, { withCredentials: true })
-      .then(() => navigate("/main"))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -205,7 +224,7 @@ export function Detail() {
         <header className="flex items-center w-full gap-6 text-xl font-bold">
           <img src={Profile} className="w-9 h-9" />
           <div className="py-8 text-xl font-bold">{data.writer}</div>
-          {user.username !== data.writer ? (
+          {user.username != data.writer ? (
             <button
               className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
               onClick={HandleChatRoom}
@@ -243,21 +262,27 @@ export function Detail() {
           <div className="flex">
             <section className="flex flex-col gap-3">
               <h1 className="text-2xl font-bold">{data.title}</h1>
-              <p className="text-sm font-bold text-gray-400">
-                {`${data.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
-                  data.building?.floor
-                }층 ∙ ${where(data.building?.id)} ∙ ${getDate(data.realtime)}`}
+              <div className="flex items-center gap-3">
+                <span className="text-primary-gray">{getDate(data.date)}</span>
+                <span className="px-4 py-2 text-xs text-primary-primary bg-[#F2F8FF] rounded-3xl">
+                  {where(data.location)}
+                </span>
+              </div>
+              <p className="text-lg font-semibold text-primary-gray">
+                {data.content}
               </p>
-              <p className="text-base font-bold">
-                사례금 : {data.price || "price"}원
-              </p>
-            </section>
-            <section className="flex items-center gap-3 ml-auto h-max">
-              <Heart onClick={ToggleLike} stroke={likeColor} fill={likeColor} />
-              <p>{likeCount}</p>
             </section>
           </div>
-          <p>{data.content}</p>
+          <footer className="flex justify-end w-full gap-3">
+            <div className="flex items-center gap-2">
+              <Heart
+                className="cursor-pointer"
+                onClick={ToggleLike}
+                fill={likeColor}
+              />
+              <span className="text-primary-gray">{likeCount}</span>
+            </div>
+          </footer>
         </main>
       </div>
     </div>
