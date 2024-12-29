@@ -24,6 +24,7 @@ function getDate(value) {
   else if (betweenTimeDay < 365) return `${betweenTimeDay}일전`;
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
+const search = localStorage.getItem("search");
 
 export function Post({ post, filter }) {
   const nav = useNavigate();
@@ -31,8 +32,6 @@ export function Post({ post, filter }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    const search = localStorage.getItem("search");
-
     if (search === "") {
       setHidden(false);
       return;
@@ -52,7 +51,7 @@ export function Post({ post, filter }) {
     ) {
       setHidden(true); // 조건이 맞지 않으면 숨김 처리
     }
-  }, [filter, search, post]);
+  }, [filter, post, search]);
 
   useEffect(() => {
     const getImgs = () => {
