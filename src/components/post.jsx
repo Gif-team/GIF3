@@ -31,18 +31,19 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    // 필터가 초기화되지 않았을 때만 필터링 진행
+    // 필터가 적용되지 않은 경우, 게시물을 숨기지 않음
     if (
+      filter.title === 0 &&
       filter.category === 0 &&
       filter.building.id === 0 &&
-      filter.building.floor === 0
+      filter.floor === 0
     ) {
       setHidden(false);
       return;
     }
 
     // 검색어 필터
-    if (search && !post.title.includes(search)) {
+    if (filter.title !== 0 && !post.title.includes(filter.title)) {
       setHidden(true);
       return;
     }
@@ -60,16 +61,14 @@ export function Post({ post, filter, search = {} }) {
     }
 
     // 층수 필터
-    if (
-      filter.building.floor !== 0 &&
-      post.building.floor !== filter.building.floor
-    ) {
+    if (filter.floor !== 0 && post.building.floor !== filter.floor) {
       setHidden(true);
       return;
     }
 
-    setHidden(false); // 모든 조건을 만족하면 숨기지 않음
-  }, [filter, search, post]);
+    // 모든 조건을 만족하면 숨기지 않음
+    setHidden(false);
+  }, [filter, post]);
 
   useEffect(() => {
     const getImgs = () => {
@@ -98,7 +97,7 @@ export function Post({ post, filter, search = {} }) {
         <div className=" opacity-[0.5] text-[13px]">
           {`${post.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
             post.building.floor
-          }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
+          }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
         </div>
         <span className="text-gray-fee">사례금:{post.price}원</span>
       </div>
