@@ -67,15 +67,15 @@ export function Detail() {
     axios
       .post(
         `${url}/post/${Param.id}/like`,
-        { like: newLikeState },
+        { like: likeBool },
         { withCredentials: true }
       )
       .catch((err) => {
         console.error(err);
         // 서버 요청 실패 시 상태 복구
-        setLikeBool(!newLikeState);
-        setLikeColor(!newLikeState ? "#ff6969" : "#E9E9E9");
-        setLikeCount((prev) => (!newLikeState ? prev + 1 : prev - 1));
+        setLikeBool(!likeBool);
+        setLikeColor(!likeBool ? "#ff6969" : "#E9E9E9");
+        setLikeCount((prev) => (!likeBool ? prev + 1 : prev - 1));
       });
   };
 
