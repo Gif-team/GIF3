@@ -31,7 +31,8 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    // 초기값으로 숨김 해제
+    console.log(post);
+    console.log(filter);
     setHidden(false);
 
     // 검색 조건 확인
@@ -67,7 +68,7 @@ export function Post({ post, filter, search = {} }) {
     <div
       onClick={() => nav(`/post/${post.id}`)}
       className={` w-[200px] m-3 h-[340px] cursor-pointer rounded-lg border-gray-border border justify-between ${
-        hidden ? "hidden" : null
+        hidden && "hidden"
       }`}
     >
       {/* {imgs.map((img) => (
