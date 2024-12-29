@@ -39,7 +39,7 @@ export function Detail() {
   const Param = useParams();
   const navigate = useNavigate();
 
-  const [likeBool, setLikeBool] = useState(getLikeState());
+  const [likeBool, setLikeBool] = useState(false);
   const [likeColor, setLikeColor] = useState("#E9E9E9");
   const [likeCount, setLikeCount] = useState(0);
   const [mount, setMount] = useState(false);
@@ -51,31 +51,18 @@ export function Detail() {
   const [chatRoom, setChatRoom] = useState([]);
   const [user, setUser] = useState([]);
 
-  function getLikeState() {
-    axios
-      .get(`${url}/post/${Param.id}/like-status`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        return res.data.like;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  // 알림
+  // 알림 팝업 상태
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
 
   const ToggleLike = () => {
     setLikeBool(!likeBool);
   };
 
-  // 좋아요 로직
+  // 좋아요 상태 변경
   useEffect(() => {
-    if (mount == true) {
+    if (mount) {
       setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
-      setLikeCount(likeBool ? likeCount + 1 : likeCount - 1);
+      setLikeCount((prev) => (likeBool ? prev + 1 : prev - 1));
 
       axios
         .post(
@@ -99,129 +86,97 @@ export function Detail() {
   };
 
   useEffect(() => {
-    // 게시물 요청
     const getPost = () => {
       axios
         .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setData(res.data);
           setLikeCount(res.data.likeNumber);
-        });
+          setLikeBool(res.data.likeState);
+        })
+        .catch((err) => console.log(err));
     };
 
-    // 이미지 요청
     const getImgs = () => {
       axios
-        .get(`${url}/post/${Param.id}`, { withCredentials: true })
+        .get(`${url}/post/${Param.id}/images`, { withCredentials: true })
         .then((res) => {
           setImg(res.data);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => console.log(err));
     };
 
-    // 로그인된 유저 확인
-    const GetLoggedUserInfo = () => {
+    const getUserInfo = () => {
       axios
         .get(`${url}/auth/user`, { withCredentials: true })
         .then((res) => {
           setUser(res.data.result);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => console.log(err));
     };
 
-    // 채팅방 확인
-    const GetChatRoom = () => {
+    const getChatRoom = () => {
       axios
         .get(`${url}/chat/room`, { withCredentials: true })
         .then((res) => {
           setChatRoom(res.data.result);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => console.log(err));
     };
 
-    GetLoggedUserInfo();
-    GetChatRoom();
     getPost();
     getImgs();
+    getUserInfo();
+    getChatRoom();
   }, [Param.id]);
 
   // 채팅방 생성
   const CreateChatRoom = () => {
     axios
-      .post(`${url}/chat/room`, { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .post(`${url}/chat/room`, {}, { withCredentials: true })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
     navigate("/chating");
   };
 
   // 채팅방 참여
   const JoinChatRoom = () => {
     axios
-      .post(`${url}/chat/room/join/${chatRoom.id}`, { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .post(
+        `${url}/chat/room/join/${chatRoom.id}`,
+        {},
+        { withCredentials: true }
+      )
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
     navigate("/chating");
   };
 
-  // 채팅방을 생성하고 참여 or 채팅방이 있으면 참여
   const HandleChatRoom = () => {
-    if (Param.id == chatRoom.id) {
+    if (Param.id === chatRoom.id) {
       JoinChatRoom();
     } else {
       CreateChatRoom();
-      JoinChatRoom();
     }
   };
 
-  // 끌어올리기
   const PullPost = () => {
     axios
       .post(
         `${url}/post/${Param.id}/update`,
-        {
-          postId: Param.id,
-        },
-        {
-          headers: {
-            withCredentials: true,
-          },
-        }
+        { postId: Param.id },
+        { headers: { withCredentials: true } }
       )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
 
-  // 게시물 삭제
   const DeletePost = () => {
     axios
       .delete(`${url}/post/${Param.id}`, { withCredentials: true })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then(() => navigate("/main"))
+      .catch((err) => console.log(err));
   };
-
-  console.log(data);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -229,20 +184,17 @@ export function Detail() {
       {alertPopUp && <AlertPopUp />}
       <div className="flex mt-[60px] items-center justify-center flex-col p-[25px]">
         <div className="flex items-center">
-          {/* 왼쪽 화살표 */}
           <img
             src={LeftArrow}
             alt="left"
             className="cursor-pointer"
             onClick={() => changeImage("left")}
           />
-          {/* 본 이미지*/}
           <img
             src={img[imgCnt]}
             alt="img"
             className="w-[550px] h-[550px] select-none rounded-2xl"
           />
-          {/* 오른쪽 화살표 */}
           <img
             src={RightArrow}
             alt="right"
@@ -253,8 +205,7 @@ export function Detail() {
         <header className="flex items-center w-full gap-6 text-xl font-bold">
           <img src={Profile} className="w-9 h-9" />
           <div className="py-8 text-xl font-bold">{data.writer}</div>
-          {/* 조회인이 나인지 타인인지  */}
-          {user.username != data.writer ? (
+          {user.username !== data.writer ? (
             <button
               className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
               onClick={HandleChatRoom}
@@ -290,7 +241,6 @@ export function Detail() {
         <div className="w-full h-[2px] bg-primary-primary"></div>
         <main className="flex flex-col w-full gap-8 px-1 pt-6">
           <div className="flex">
-            {/* 내용 */}
             <section className="flex flex-col gap-3">
               <h1 className="text-2xl font-bold">{data.title}</h1>
               <p className="text-sm font-bold text-gray-400">
@@ -302,13 +252,12 @@ export function Detail() {
                 사례금 : {data.price || "price"}원
               </p>
             </section>
-            {/* 좋아요 */}
             <section className="flex items-center gap-3 ml-auto h-max">
-              <Heart onClick={ToggleLike} stroke={likeColor} />
-              <p className="text-2xl font-black text-gray-500">{likeCount}</p>
+              <Heart onClick={ToggleLike} stroke={likeColor} fill={likeColor} />
+              <p>{likeCount}</p>
             </section>
           </div>
-          <p className="text-sm font-normal">{data.content || "content"}</p>
+          <p>{data.content}</p>
         </main>
       </div>
     </div>
