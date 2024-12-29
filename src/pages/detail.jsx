@@ -50,7 +50,13 @@ export function Detail() {
 
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-
+  function getState() {
+    axios
+      .get(`${url}/post/${Param.id}`, { withCredentials: true })
+      .then((res) => {
+        setLikeBool(res.data.likeState);
+      });
+  }
   // 좋아요 상태 토글
   const ToggleLike = () => {
     const newLikeState = !likeBool;
@@ -84,6 +90,7 @@ export function Detail() {
   };
 
   useEffect(() => {
+    getState();
     // 게시물 요청
     const getPost = () => {
       axios
