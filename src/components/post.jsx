@@ -35,6 +35,12 @@ export function Post({ post, filter, search = {} }) {
     console.log("filter", filter);
     console.log("search", search);
 
+    if (search === "") {
+      setHidden(false);
+      return;
+    }
+    if (!post.title.includes(search)) setHidden(true);
+
     // 기본 상태 초기화
     setHidden(false);
     if (filter.category === 0 && filter.building_Id === 0 && filter.floor === 0)
