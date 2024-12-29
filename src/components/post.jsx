@@ -31,21 +31,44 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    if (filter.title === 0 && filter.category === 0 && filter.building.id === 0)
+    // 필터가 적용되지 않은 경우, 게시물을 숨기지 않음
+    if (
+      filter.title === 0 &&
+      filter.category === 0 &&
+      filter.building.id === 0 &&
+      filter.floor === 0
+    ) {
+      setHidden(false);
       return;
-    if (!post.title.includes(search)) {
-      setHidden(true);
     }
-    if (post.category !== null && post.category !== filter.category) {
+
+    // 검색어 필터
+    if (filter.title !== 0 && !post.title.includes(filter.title)) {
       setHidden(true);
+      return;
     }
-    if (post.building.id !== null && post.building.id !== filter.building_id) {
+
+    // 카테고리 필터
+    if (filter.category !== 0 && post.category !== filter.category) {
       setHidden(true);
+      return;
     }
-    if (post.building.floor !== null && post.building.floor !== filter.floor) {
+
+    // 건물 ID 필터
+    if (filter.building.id !== 0 && post.building.id !== filter.building.id) {
       setHidden(true);
+      return;
     }
-  }, [filter, search, post]);
+
+    // 층수 필터
+    if (filter.floor !== 0 && post.building.floor !== filter.floor) {
+      setHidden(true);
+      return;
+    }
+
+    // 모든 조건을 만족하면 숨기지 않음
+    setHidden(false);
+  }, [filter, post]);
 
   useEffect(() => {
     const getImgs = () => {
