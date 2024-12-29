@@ -33,20 +33,23 @@ export function Post({ post, filter, search = {} }) {
   useEffect(() => {
     console.log("post", post);
     console.log("filter", filter);
+    console.log("search", search);
+
     // 초기값으로 숨김 해제
     setHidden(false);
 
     // 검색 조건 확인
-    if (search && !post.title.includes(search)) {
+    if (search && !post.title.includes(String(search))) {
       setHidden(true);
       return;
     }
 
     // 필터 조건 확인
     if (
-      (filter.category !== 0 && post.category !== Boolean(filter.category)) || // 카테고리 필터
+      (filter.category !== 0 &&
+        Boolean(post.category) !== Boolean(filter.category)) || // 카테고리 필터
       (filter.building_Id !== 0 && post.building.id !== filter.building_Id) || // 건물 ID 필터
-      (filter.floor !== 0 && post.building.floor !== filter.floor) // 층수 필터
+      (filter.floor !== 0 && post.building.floor !== Number(filter.floor)) // 층수 필터
     ) {
       setHidden(true);
       return;
