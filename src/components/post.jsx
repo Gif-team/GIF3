@@ -37,7 +37,8 @@ export function Post({ post, filter, search = {} }) {
 
     // 기본 상태 초기화
     setHidden(false);
-
+    if (filter.category === 0 && filter.building_Id === 0 && filter.floor === 0)
+      return;
     // 필터 조건 확인
     if (
       (filter.category !== 0 &&
