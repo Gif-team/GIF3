@@ -59,10 +59,9 @@ export function Detail() {
   }
   // 좋아요 상태 토글
   const ToggleLike = () => {
-    const newLikeState = !likeBool;
-    setLikeBool(newLikeState); // 상태 변경
-    setLikeColor(newLikeState ? "#ff6969" : "#E9E9E9");
-    setLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
+    getState();
+    setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
+    setLikeCount((prev) => (likeBool ? prev + 1 : prev - 1));
 
     // 서버로 좋아요 상태 전송
     axios
