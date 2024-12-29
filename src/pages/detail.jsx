@@ -139,7 +139,7 @@ export function Detail() {
 
   const PullPost = () => {
     axios
-      .post(`${url}/post/${Param.id}/update`, { withCredentials: true })
+      .put(`${url}/post/${Param.id}/update`, { withCredentials: true })
       .catch((err) => console.log(err));
   };
 
