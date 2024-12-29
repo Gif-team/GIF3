@@ -28,7 +28,7 @@ function getDate(value) {
 
   if (betweenTime < 1) return "방금전";
   else if (betweenTime < 60) return `${betweenTime}분전`;
-  else if (betweenTimeHour < 24) return `${betweenTimeHour + 9}시간전`;
+  else if (betweenTimeHour < 24) return `${betweenTimeHour}시간전`;
   else if (betweenTimeDay < 365) return `${betweenTimeDay}일전`;
   else return `${Math.floor(betweenTimeDay / 365)}년전`;
 }
@@ -50,33 +50,38 @@ export function Detail() {
 
   // 알림
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
-  function getState() {
+
+  // 좋아요 상태 가져오기
+  const fetchLikeState = () => {
     axios
-      .get(`${url}/post/${Param.id}`, { withCredentials: true })
+      .get(`${url}/post/${Param.id}/like`, { withCredentials: true })
       .then((res) => {
         setLikeBool(res.data.liketrueorfalse);
         setLikeColor(res.data.liketrueorfalse ? "#ff6969" : "#E9E9E9");
+      })
+      .catch((err) => {
+        console.error("좋아요 상태 가져오기 실패:", err);
       });
-  }
+  };
+
   // 좋아요 상태 토글
   const ToggleLike = () => {
-    getState();
-    setLikeColor(likeBool ? "#ff6969" : "#E9E9E9");
-    setLikeCount((prev) => (likeBool ? prev + 1 : prev - 1));
+    const newLikeState = !likeBool;
+    setLikeBool(newLikeState);
+    setLikeColor(newLikeState ? "#ff6969" : "#E9E9E9");
+    setLikeCount((prev) => (newLikeState ? prev + 1 : prev - 1));
 
-    // 서버로 좋아요 상태 전송
     axios
       .post(
         `${url}/post/${Param.id}/like`,
-        { like: likeBool },
+        { like: newLikeState },
         { withCredentials: true }
       )
       .catch((err) => {
         console.error(err);
-        // 서버 요청 실패 시 상태 복구
-        setLikeBool(!likeBool);
-        setLikeColor(!likeBool ? "#ff6969" : "#E9E9E9");
-        setLikeCount((prev) => (!likeBool ? prev + 1 : prev - 1));
+        setLikeBool(!newLikeState); // 요청 실패 시 복구
+        setLikeColor(!newLikeState ? "#ff6969" : "#E9E9E9");
+        setLikeCount((prev) => (!newLikeState ? prev + 1 : prev - 1));
       });
   };
 
@@ -90,20 +95,19 @@ export function Detail() {
   };
 
   useEffect(() => {
-    getState();
-    // 게시물 요청
+    // 게시물 데이터 가져오기
     const getPost = () => {
       axios
         .get(`${url}/post/${Param.id}`, { withCredentials: true })
         .then((res) => {
           setData(res.data);
           setLikeCount(res.data.likeNumber);
-          setLikeBool(res.data.likeState); // 초기 좋아요 상태 설정
+          setLikeBool(res.data.likeState);
           setLikeColor(res.data.likeState ? "#ff6969" : "#E9E9E9");
         });
     };
 
-    // 이미지 요청
+    // 이미지 데이터 가져오기
     const getImgs = () => {
       axios
         .get(`${url}/post/${Param.id}`, { withCredentials: true })
@@ -115,7 +119,7 @@ export function Detail() {
         });
     };
 
-    // 로그인된 유저 확인
+    // 로그인된 유저 정보 확인
     const GetLoggedUserInfo = () => {
       axios
         .get(`${url}/auth/user`, { withCredentials: true })
@@ -127,7 +131,7 @@ export function Detail() {
         });
     };
 
-    // 채팅방 확인
+    // 채팅방 데이터 가져오기
     const GetChatRoom = () => {
       axios
         .get(`${url}/chat/room`, { withCredentials: true })
@@ -143,6 +147,7 @@ export function Detail() {
     GetChatRoom();
     getPost();
     getImgs();
+    fetchLikeState(); // 좋아요 상태 가져오기
   }, [Param.id]);
 
   // 채팅방 생성 및 참여
@@ -173,7 +178,17 @@ export function Detail() {
   // 끌어올리기
   const PullPost = () => {
     axios
-      .put(`${url}/post/${Param.id}/update`, { withCredentials: true })
+      .post(
+        `${url}/post/${Param.id}/update`,
+        {
+          postId: Param.id,
+        },
+        {
+          headers: {
+            withCredentials: true,
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data);
       })
@@ -195,92 +210,16 @@ export function Detail() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div>
+      {/* 페이지 렌더링 */}
       <Header />
-      {alertPopUp && <AlertPopUp />}
-      <div className="flex mt-[60px] items-center justify-center flex-col p-[25px]">
-        <div className="flex items-center">
-          <img
-            src={LeftArrow}
-            alt="left"
-            className="cursor-pointer"
-            onClick={() => changeImage("left")}
-          />
-          <img
-            src={img[imgCnt]}
-            alt="img"
-            className="w-[550px] h-[550px] select-none rounded-2xl"
-          />
-          <img
-            src={RightArrow}
-            alt="right"
-            className="cursor-pointer"
-            onClick={() => changeImage("right")}
-          />
-        </div>
-        <header className="flex items-center w-full gap-6 text-xl font-bold">
-          <img src={Profile} className="w-9 h-9" />
-          <div className="py-8 text-xl font-bold">{data.writer}</div>
-          {user.username != data.writer ? (
-            <button
-              className="px-4 py-3 ml-auto text-white bg-primary-primary rounded-3xl"
-              onClick={HandleChatRoom}
-            >
-              채팅하기
-            </button>
-          ) : (
-            <div className="flex gap-3 ml-auto">
-              <button
-                className="px-4 py-3 text-white bg-red-500 rounded-3xl"
-                onClick={() => {
-                  DeletePost();
-                  navigate("/main");
-                }}
-              >
-                삭제하기
-              </button>
-              <button
-                className="px-4 py-3 text-white bg-primary-primary rounded-3xl"
-                onClick={() => navigate(`/postEdit/${Param.id}`)}
-              >
-                수정하기
-              </button>
-              <button
-                className="px-4 py-3 bg-white border text-primary-primary border-primary-primary rounded-3xl"
-                onClick={PullPost}
-              >
-                끌어올리기
-              </button>
-            </div>
-          )}
-        </header>
-        <div className="w-full h-[2px] bg-primary-primary"></div>
-        <main className="flex flex-col w-full gap-8 px-1 pt-6">
-          <div className="flex">
-            <section className="flex flex-col gap-3">
-              <h1 className="text-2xl font-bold">{data.title}</h1>
-              <div className="flex items-center gap-3">
-                <span className="text-primary-gray">{getDate(data.date)}</span>
-                <span className="px-4 py-2 text-xs text-primary-primary bg-[#F2F8FF] rounded-3xl">
-                  {where(data.location)}
-                </span>
-              </div>
-              <p className="text-lg font-semibold text-primary-gray">
-                {data.content}
-              </p>
-            </section>
-          </div>
-          <footer className="flex justify-end w-full gap-3">
-            <div className="flex items-center gap-2">
-              <Heart
-                className="cursor-pointer"
-                onClick={ToggleLike}
-                fill={likeColor}
-              />
-              <span className="text-primary-gray">{likeCount}</span>
-            </div>
-          </footer>
-        </main>
+      <div>
+        <Heart
+          fill={likeColor}
+          onClick={ToggleLike}
+          style={{ cursor: "pointer" }}
+        />
+        <span>{likeCount}</span>
       </div>
     </div>
   );
