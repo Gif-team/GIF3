@@ -31,20 +31,44 @@ export function Post({ post, filter, search = {} }) {
   const [imgs, setImgs] = useState("");
 
   useEffect(() => {
-    if (filter.title === 0 && filter.category === 0 && filter.building.id === 0)
+    // 필터가 초기화되지 않았을 때만 필터링 진행
+    if (
+      filter.category === 0 &&
+      filter.building.id === 0 &&
+      filter.building.floor === 0
+    ) {
+      setHidden(false);
       return;
-    if (!post.title.includes(search)) {
-      setHidden(true);
     }
-    if (post.category !== null && post.category !== filter.category) {
+
+    // 검색어 필터
+    if (search && !post.title.includes(search)) {
       setHidden(true);
+      return;
     }
-    if (post.building.id !== null && post.building.id !== filter.building_id) {
+
+    // 카테고리 필터
+    if (filter.category !== 0 && post.category !== filter.category) {
       setHidden(true);
+      return;
     }
-    if (post.building.floor !== null && post.building.floor !== filter.floor) {
+
+    // 건물 ID 필터
+    if (filter.building.id !== 0 && post.building.id !== filter.building.id) {
       setHidden(true);
+      return;
     }
+
+    // 층수 필터
+    if (
+      filter.building.floor !== 0 &&
+      post.building.floor !== filter.building.floor
+    ) {
+      setHidden(true);
+      return;
+    }
+
+    setHidden(false); // 모든 조건을 만족하면 숨기지 않음
   }, [filter, search, post]);
 
   useEffect(() => {
@@ -74,7 +98,7 @@ export function Post({ post, filter, search = {} }) {
         <div className=" opacity-[0.5] text-[13px]">
           {`${post.category ? "찾았습니다" : "잃어버렸습니다"} ∙ ${
             post.building.floor
-          }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
+          }층 ∙ ${where(post.building.id)} ∙ ${getDate(post.realtime)}`}
         </div>
         <span className="text-gray-fee">사례금:{post.price}원</span>
       </div>
