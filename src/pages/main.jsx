@@ -14,20 +14,20 @@ import WriteBtn from "../imgs/writeBtn.svg";
 import ChatBtn from "../imgs/chatBtn.svg";
 
 const example = [
-  // {
-  //   id: 1,
-  //   title: "에어팟 찾기",
-  //   content: "에어팟을 잃어버렸어요",
-  //   category: false,
-  //   price: 10000,
-  //   realtime: "2024-12-30T10:45:21.000",
-  //   writer: "배경진",
-  //   writerId: 1,
-  //   building: {
-  //     id: 1,
-  //     floor: 3,
-  //   },
-  // },
+  {
+    id: 1,
+    title: "에어팟 찾기",
+    content: "에어팟을 잃어버렸어요",
+    category: false,
+    price: 10000,
+    realtime: "2024-12-30T11:05:21.000",
+    writer: "배경진",
+    writerId: 1,
+    building: {
+      id: 1,
+      floor: 3,
+    },
+  },
   {
     id: 1,
     title: "우유찾기",
