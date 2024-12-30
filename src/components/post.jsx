@@ -29,7 +29,7 @@ const search = localStorage.getItem("search");
 export function Post({ post, filter }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
-  const [imgs, setImgs] = useState("");
+  const [imgs, setImgs] = useState();
 
   useEffect(() => {
     if (search === "") {
@@ -76,6 +76,7 @@ export function Post({ post, filter }) {
       {/* {imgs.map((img) => (
         <img src={img} alt="게시물 사진" />
       ))} */}
+      <img src="src\imgs\에어팟.jpg" alt="게시물 사진" />
       <div className="gap-3 flex flex-col justify-center m-[12px]">
         <h3 className="text-[21px] font-bold">{post.title}</h3>
         <div className=" opacity-[0.5] text-[13px]">
