@@ -84,7 +84,7 @@ export function Main({ search }) {
         <div className="flex flex-wrap">
           {loading ? (
             <div>로딩 중...</div>
-          ) : posts.length > 0 ? (
+          ) : example.length > 0 ? (
             example.map((post) => (
               <Post
                 key={post.id}
