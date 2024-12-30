@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import air from "../imgs/air.png";
 
 function where(lo) {
   if (lo === 1) return "본관";
@@ -29,7 +30,7 @@ const search = localStorage.getItem("search");
 export function Post({ post, filter }) {
   const nav = useNavigate();
   const [hidden, setHidden] = useState(false);
-  const [imgs, setImgs] = useState("");
+  const [imgs, setImgs] = useState();
 
   useEffect(() => {
     // search 값이 빈 문자열일 때 모든 게시물이 보이도록 설정
@@ -79,6 +80,11 @@ export function Post({ post, filter }) {
       {/* {imgs.map((img) => (
         <img src={img} alt="게시물 사진" />
       ))} */}
+      <img
+        src={air}
+        alt="게시물 사진아니라고"
+        style={{ width: "100%", height: "200px" }}
+      />
       <div className="gap-3 flex flex-col justify-center m-[12px]">
         <h3 className="text-[21px] font-bold">{post.title}</h3>
         <div className=" opacity-[0.5] text-[13px]">

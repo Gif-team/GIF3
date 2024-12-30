@@ -9,10 +9,40 @@ import { FilterPopup } from "../components/filterPopup";
 
 import { url } from "./config";
 import axios from "axios";
-
 import FilterBtn from "../imgs/filterBtn.svg";
 import WriteBtn from "../imgs/writeBtn.svg";
 import ChatBtn from "../imgs/chatBtn.svg";
+
+const example = [
+  {
+    id: 1,
+    title: "에어팟 찾기",
+    content: "에어팟을 잃어버렸어요",
+    category: false,
+    price: 10000,
+    realtime: "2024-12-30T11:05:21.000",
+    writer: "배경진",
+    writerId: 1,
+    building: {
+      id: 1,
+      floor: 3,
+    },
+  },
+  {
+    id: 1,
+    title: "우유찾기",
+    content: "내 우유 누가 먹음?",
+    category: false,
+    price: 10000,
+    realtime: "2024-12-29T20:21:01.000",
+    writer: "배경진",
+    writerId: 1,
+    building: {
+      id: 2,
+      floor: 5,
+    },
+  },
+];
 
 export function Main({ search }) {
   const { alertPopUp, setAlertPopUp } = useContext(AlertContext);
@@ -53,8 +83,8 @@ export function Main({ search }) {
         <div className="flex flex-wrap">
           {loading ? (
             <div>로딩 중...</div>
-          ) : posts.length > 0 ? (
-            posts.map((post) => (
+          ) : example.length > 0 ? (
+            example.map((post) => (
               <Post
                 key={post.id}
                 post={post}
