@@ -9,7 +9,6 @@ import { FilterPopup } from "../components/filterPopup";
 
 import { url } from "./config";
 import axios from "axios";
-
 import FilterBtn from "../imgs/filterBtn.svg";
 import WriteBtn from "../imgs/writeBtn.svg";
 import ChatBtn from "../imgs/chatBtn.svg";
@@ -19,7 +18,7 @@ const example = [
     id: 1,
     title: "에어팟 찾기",
     content: "에어팟을 잃어버렸어요",
-    category: true,
+    category: false,
     price: 10000,
     realtime: "2024-12-30T10:45:21.000",
     writer: "배경진",
@@ -33,7 +32,7 @@ const example = [
     id: 1,
     title: "우유찾기",
     content: "내 우유 누가 먹음?",
-    category: true,
+    category: false,
     price: 10000,
     realtime: "2024-12-29T20:21:01.000",
     writer: "배경진",

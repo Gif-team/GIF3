@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import air from "../imgs/air.png";
 
 function where(lo) {
   if (lo === 1) return "본관";
@@ -76,7 +77,11 @@ export function Post({ post, filter }) {
       {/* {imgs.map((img) => (
         <img src={img} alt="게시물 사진" />
       ))} */}
-      <img src="src\imgs\에어팟.jpg" alt="게시물 사진" />
+      <img
+        src={air}
+        alt="게시물 사진아니라고"
+        style={{ width: "100%", height: "200px" }}
+      />
       <div className="gap-3 flex flex-col justify-center m-[12px]">
         <h3 className="text-[21px] font-bold">{post.title}</h3>
         <div className=" opacity-[0.5] text-[13px]">
