@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import air from "../imgs/air.png";
 
 function where(lo) {
   if (lo === 1) return "본관";
@@ -80,7 +81,7 @@ export function Post({ post, filter }) {
         <img src={img} alt="게시물 사진" />
       ))} */}
       <img
-        src={imgs[0]}
+        src={imgs ? imgs[0] : air}
         alt="게시물 사진아니라고"
         style={{ width: "100%", height: "200px" }}
       />
