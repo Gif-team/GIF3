@@ -81,7 +81,7 @@ export function Post({ post, filter }) {
         <img src={img} alt="게시물 사진" />
       ))} */}
       <img
-        src={air}
+        src={imgs ? imgs[0] : air}
         alt="게시물 사진아니라고"
         style={{ width: "100%", height: "200px" }}
       />
